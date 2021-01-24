@@ -1,0 +1,85 @@
+name:                schisma
+version:             0.0.1.0
+github:              "schisma/schisma"
+license:             BSD3
+author:              "intercalations"
+maintainer:          "intercalations@protonmail.com"
+copyright:           "2018-2021 intercalations"
+data-dir:            data
+data-files:
+- "includes/adsr140.udo"
+- "includes/adsrForTiedNotes.udo"
+- "includes/isMidiNotePlaying.udo"
+- "includes/loadFluidEngine.udo"
+- "includes/midiAmplitudeAndFrequency.udo"
+- "includes/midiChannelMatches.udo"
+- "includes/rawMidiAmplitudeAndFrequency.udo"
+- "includes/sfplayForTiedNotes.udo"
+- "includes/tieStatus.udo"
+
+default-extensions:
+- FlexibleContexts
+- FlexibleInstances
+- FunctionalDependencies
+- MagicHash
+- MultiParamTypeClasses
+- OverloadedStrings
+
+extra-source-files:
+- README.md
+- CHANGELOG.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/schisma/schisma#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+- aeson
+- bytestring
+- containers
+- directory
+- filepath
+- megaparsec
+- optparse-applicative
+- prettyprinter
+- process
+- random
+- tasty
+- tasty-hunit
+- tasty-smallcheck
+- tasty-quickcheck
+- text
+- text-manipulate
+
+library:
+  source-dirs: src
+  other-modules:
+    - Paths_schisma
+
+tests:
+  schisma-test:
+    main:                Test.hs
+    source-dirs:         tests
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - schisma
+
+executables:
+  schisma:
+    main:                Main.hs
+    source-dirs:         bin
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - schisma

@@ -1,0 +1,5 @@
+/bin/schisma
+.stack-work/
+*~
+/docs
+/gui/node_modules

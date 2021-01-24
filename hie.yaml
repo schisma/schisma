@@ -1,0 +1,13 @@
+cradle:
+  stack:
+    - path: "./src"
+      component: "schisma:lib"
+
+    - path: "./bin/Main.hs"
+      component: "schisma:exe:schisma"
+
+    - path: "./bin/Paths_schisma.hs"
+      component: "schisma:exe:schisma"
+
+    - path: "./tests"
+      component: "schisma:test:schisma-test"

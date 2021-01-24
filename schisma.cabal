@@ -1,0 +1,187 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.34.3.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: f2e25ea7d8f0f3e49928c1c6a8df238d719354033edacb48cca3bd5c05ac28e2
+
+name:           schisma
+version:        0.0.1.0
+description:    Please see the README on GitHub at <https://github.com/schisma/schisma#readme>
+homepage:       https://github.com/schisma/schisma#readme
+bug-reports:    https://github.com/schisma/schisma/issues
+author:         intercalations
+maintainer:     intercalations@protonmail.com
+copyright:      2018-2021 intercalations
+license:        BSD3
+build-type:     Simple
+extra-source-files:
+    README.md
+    CHANGELOG.md
+data-files:
+    includes/adsr140.udo
+    includes/adsrForTiedNotes.udo
+    includes/isMidiNotePlaying.udo
+    includes/loadFluidEngine.udo
+    includes/midiAmplitudeAndFrequency.udo
+    includes/midiChannelMatches.udo
+    includes/rawMidiAmplitudeAndFrequency.udo
+    includes/sfplayForTiedNotes.udo
+    includes/tieStatus.udo
+data-dir:       data
+
+source-repository head
+  type: git
+  location: https://github.com/schisma/schisma
+
+library
+  exposed-modules:
+      ProjectPaths
+      Schisma
+      Schisma.CLI
+      Schisma.CLI.Synth
+      Schisma.CLI.Tracker
+      Schisma.Csound
+      Schisma.Csound.GenRoutines
+      Schisma.Csound.Opcodes
+      Schisma.Csound.Opcodes.AmplitudeModifiers
+      Schisma.Csound.Opcodes.Arithmetic
+      Schisma.Csound.Opcodes.Display
+      Schisma.Csound.Opcodes.EnvelopeGenerators
+      Schisma.Csound.Opcodes.ExponentialGenerators
+      Schisma.Csound.Opcodes.Filters
+      Schisma.Csound.Opcodes.FunctionTables
+      Schisma.Csound.Opcodes.Initializations
+      Schisma.Csound.Opcodes.InstrumentDuration
+      Schisma.Csound.Opcodes.InstrumentInvocation
+      Schisma.Csound.Opcodes.LinearGenerators
+      Schisma.Csound.Opcodes.Logic
+      Schisma.Csound.Opcodes.MathematicalFunctions
+      Schisma.Csound.Opcodes.MidiConverters
+      Schisma.Csound.Opcodes.MidiEventExtenders
+      Schisma.Csound.Opcodes.MidiInput
+      Schisma.Csound.Opcodes.MidiInterop
+      Schisma.Csound.Opcodes.Oscillators
+      Schisma.Csound.Opcodes.Phasors
+      Schisma.Csound.Opcodes.PitchConverters
+      Schisma.Csound.Opcodes.RandomGenerators
+      Schisma.Csound.Opcodes.Reverberators
+      Schisma.Csound.Opcodes.SampleLevelOperators
+      Schisma.Csound.Opcodes.SamplePlayback
+      Schisma.Csound.Opcodes.SignalLimiters
+      Schisma.Csound.Opcodes.SignalOutput
+      Schisma.Csound.Opcodes.SoftwareBus
+      Schisma.Csound.Opcodes.Strings
+      Schisma.Csound.Opcodes.TableAccess
+      Schisma.Csound.Opcodes.TableQueries
+      Schisma.Csound.Opcodes.TableReadWriteOperations
+      Schisma.Csound.Orchestra
+      Schisma.Csound.Renderer
+      Schisma.Csound.Score
+      Schisma.Csound.SignalGenerators
+      Schisma.Csound.Types
+      Schisma.Csound.Utilities
+      Schisma.IO
+      Schisma.Music.Translator
+      Schisma.Music.Types
+      Schisma.Synth
+      Schisma.Synth.Emulations.Patches
+      Schisma.Synth.Emulations.Profit
+      Schisma.Synth.Instruments
+      Schisma.Synth.Parameters
+      Schisma.Synth.SoundFont
+      Schisma.Synth.Types
+      Schisma.Synth.Utilities
+      Schisma.Tracker.Mappers
+      Schisma.Tracker.Parser
+      Schisma.Tracker.Translator
+      Schisma.Tracker.Types
+      Schisma.Utilities
+  other-modules:
+      Paths_schisma
+  hs-source-dirs:
+      src
+  default-extensions: FlexibleContexts FlexibleInstances FunctionalDependencies MagicHash MultiParamTypeClasses OverloadedStrings
+  build-depends:
+      aeson
+    , base >=4.7 && <5
+    , bytestring
+    , containers
+    , directory
+    , filepath
+    , megaparsec
+    , optparse-applicative
+    , prettyprinter
+    , process
+    , random
+    , tasty
+    , tasty-hunit
+    , tasty-quickcheck
+    , tasty-smallcheck
+    , text
+    , text-manipulate
+  default-language: Haskell2010
+
+executable schisma
+  main-is: Main.hs
+  other-modules:
+      Paths_schisma
+  hs-source-dirs:
+      bin
+  default-extensions: FlexibleContexts FlexibleInstances FunctionalDependencies MagicHash MultiParamTypeClasses OverloadedStrings
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      aeson
+    , base >=4.7 && <5
+    , bytestring
+    , containers
+    , directory
+    , filepath
+    , megaparsec
+    , optparse-applicative
+    , prettyprinter
+    , process
+    , random
+    , schisma
+    , tasty
+    , tasty-hunit
+    , tasty-quickcheck
+    , tasty-smallcheck
+    , text
+    , text-manipulate
+  default-language: Haskell2010
+
+test-suite schisma-test
+  type: exitcode-stdio-1.0
+  main-is: Test.hs
+  other-modules:
+      Integration.Csound.Helpers
+      Integration.Csound.Opcodes.Logic
+      Integration.Csound.Opcodes.Oscillators
+      Integration.Csound.Opcodes.Reverberators
+      Paths_schisma
+  hs-source-dirs:
+      tests
+  default-extensions: FlexibleContexts FlexibleInstances FunctionalDependencies MagicHash MultiParamTypeClasses OverloadedStrings
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      aeson
+    , base >=4.7 && <5
+    , bytestring
+    , containers
+    , directory
+    , filepath
+    , megaparsec
+    , optparse-applicative
+    , prettyprinter
+    , process
+    , random
+    , schisma
+    , tasty
+    , tasty-hunit
+    , tasty-quickcheck
+    , tasty-smallcheck
+    , text
+    , text-manipulate
+  default-language: Haskell2010
