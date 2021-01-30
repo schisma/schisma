@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f2e25ea7d8f0f3e49928c1c6a8df238d719354033edacb48cca3bd5c05ac28e2
+-- hash: 854f75424cf0baa85a0c594c4c588e0758149a4d40703f42900853c0957bcac9
 
 name:           schisma
 version:        0.0.1.0
@@ -80,7 +80,11 @@ library
       Schisma.Csound.Renderer
       Schisma.Csound.Score
       Schisma.Csound.SignalGenerators
-      Schisma.Csound.Types
+      Schisma.Csound.Types.Compilation
+      Schisma.Csound.Types.Csound
+      Schisma.Csound.Types.Instruments
+      Schisma.Csound.Types.Score
+      Schisma.Csound.Types.Signals
       Schisma.Csound.Utilities
       Schisma.IO
       Schisma.Music.Translator
