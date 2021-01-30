@@ -7,12 +7,23 @@ module Schisma.Csound.SignalGenerators
   , pi#
   , pk#
   , stringSignal
-  )
-where
+  ) where
 
 import           Data.Text                      ( Text )
 
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Signals   ( ARateSignal(..)
+                                                , IRateSignal(..)
+                                                , KRateSignal(..)
+                                                , Opcode
+                                                  ( ConstDouble
+                                                  , ConstText
+                                                  , Opcode
+                                                  , PField
+                                                  )
+                                                , SRateSignal(..)
+                                                , Signal(Signal)
+                                                , SignalRate(..)
+                                                )
 
 class MultipleSignalGenerator a where
   -- | Creates the output signals for an opcode.

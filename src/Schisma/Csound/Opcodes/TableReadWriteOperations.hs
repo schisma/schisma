@@ -1,11 +1,14 @@
 module Schisma.Csound.Opcodes.TableReadWriteOperations
   ( tabmorphak
-  )
-where
+  ) where
 
 import           Schisma.Csound.SignalGenerators
                                                 ( makeOpcodeSignal )
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Signals   ( ARateSignal
+                                                , IRateSignal
+                                                , IsSignal(getSignal)
+                                                , KRateSignal
+                                                )
 
 -- | 'tabmorphak' allows morphing between a set of tables of the same size,
 --   by means of a weighted average between two currently selected tables.

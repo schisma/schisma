@@ -1,14 +1,15 @@
 module Schisma.Csound.Opcodes.FunctionTables
   ( ftgenonce
   , ftgentmp
-  )
-where
+  ) where
 
 import           Schisma.Csound.SignalGenerators
                                                 ( i#
                                                 , makeOpcodeSignal
                                                 )
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Signals   ( IRateSignal
+                                                , IsSignal(getSignal)
+                                                )
 
 
 -- | Enables the creation of function tables entirely inside instrument

@@ -1,14 +1,17 @@
 module Schisma.Csound.Opcodes.TableAccess
   ( Table(..)
-  )
-where
+  ) where
 
 import           Schisma.Csound.SignalGenerators
                                                 ( SignalGenerator
                                                 , i#
                                                 , makeOpcodeSignal
                                                 )
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Signals   ( ARateSignal
+                                                , IRateSignal
+                                                , IsSignal(..)
+                                                , KRateSignal
+                                                )
 
 class (IsSignal a, SignalGenerator b) => Table a b where
   -- | Accesses table values by direct indexing.

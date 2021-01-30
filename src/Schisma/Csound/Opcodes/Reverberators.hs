@@ -3,17 +3,19 @@ module Schisma.Csound.Opcodes.Reverberators
   , baboWithDefaults
   , freeverb
   , freeverbWithDefaults
-  )
-where
+  ) where
 
+import           Schisma.Csound.Opcodes.FunctionTables
+                                                ( ftgenonce )
 import           Schisma.Csound.SignalGenerators
                                                 ( i#
                                                 , makeOpcodeSignals
                                                 )
-import           Schisma.Csound.Types
-
-import           Schisma.Csound.Opcodes.FunctionTables
-                                                ( ftgenonce )
+import           Schisma.Csound.Types.Signals   ( ARateSignal
+                                                , IRateSignal
+                                                , IsSignal(getSignal)
+                                                , KRateSignal
+                                                )
 
 -- | A physical model reverberator.
 --
@@ -29,13 +31,9 @@ import           Schisma.Csound.Opcodes.FunctionTables
 --   <https://csound.com/docs/manual/babo.html Csound documentation>
 babo
   :: ARateSignal    -- ^ @inputSignal@ - The input signal.
-  -> (KRateSignal,
-    KRateSignal,
-    KRateSignal)    -- ^ @(x, y, z)@ - The virtual coordinates of the source of
+  -> (KRateSignal, KRateSignal, KRateSignal)    -- ^ @(x, y, z)@ - The virtual coordinates of the source of
                     --   sound (i.e., the @inputSignal@ signal).
-  -> (IRateSignal,
-     IRateSignal,
-     IRateSignal)   -- ^ @(width, depth, height)@ - The coordinates of the
+  -> (IRateSignal, IRateSignal, IRateSignal)   -- ^ @(width, depth, height)@ - The coordinates of the
                     --   geometry of the resonator (length of the edges in
                     --   meters).
   -> IRateSignal    -- ^ @diffusion@ - The coefficient of diffusion at the
@@ -83,13 +81,9 @@ babo inputSignal (x, y, z) (width, depth, height) diffusion ftn =
 --   <https://csound.com/docs/manual/babo.html Csound documentation>
 baboWithDefaults
   :: ARateSignal    -- ^ @inputSignal@ - The input signal.
-  -> (KRateSignal,
-    KRateSignal,
-    KRateSignal)    -- ^ @(x, y, z)@ - The virtual coordinates of the source of
+  -> (KRateSignal, KRateSignal, KRateSignal)    -- ^ @(x, y, z)@ - The virtual coordinates of the source of
                     --   sound (i.e., the @inputSignal@ signal).
-  -> (IRateSignal,
-     IRateSignal,
-     IRateSignal)   -- ^ @(width, depth, height)@ - The coordinates of the
+  -> (IRateSignal, IRateSignal, IRateSignal)   -- ^ @(width, depth, height)@ - The coordinates of the
                     --   geometry of the resonator (length of the edges in
                     --   meters).
   -> [ARateSignal]  -- ^ The returned signals.

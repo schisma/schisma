@@ -1,32 +1,21 @@
-module Schisma.Csound.Types
+module Schisma.Csound.Types.Signals
   ( ARateSignal(..)
   , Conditional(..)
-  , ConditionalBlock(..)
   , ContainsSignals
-  , Csd(..)
-  , FunctionTableStatement(..)
   , IRateSignal(..)
   , KRateSignal(..)
   , IsSignal
-  , Instrument(..)
-  , InstrumentLine(..)
-  , InstrumentState(..)
-  , InstrumentStatement(..)
   , Opcode(..)
   , OrdinaryStatement(..)
   , SRateSignal(..)
-  , ScoreStatement(..)
   , Signal(..)
   , SignalRate(..)
-  , Sound(..)
   , StatementOpcode(..)
   , Udo(..)
   , getSignal
   , getSignals
   ) where
 
-import           Data.Map.Strict                ( Map )
-import           Data.Set                       ( Set )
 import           Data.Text                      ( Text )
 
 data Signal = Signal
@@ -104,12 +93,13 @@ data OrdinaryStatement
   deriving (Show, Ord, Eq)
 
 data Udo = Udo
-  { udoName :: Text
-  , udoInputRates :: [SignalRate]
-  , udoOutputRates :: [SignalRate]
-  , udoOpcode :: Opcode
+  { udoName                 :: Text
+  , udoInputRates           :: [SignalRate]
+  , udoOutputRates          :: [SignalRate]
+  , udoOpcode               :: Opcode
   , udoControlPeriodSamples :: Integer
-  } deriving (Show, Ord, Eq)
+  }
+  deriving (Show, Ord, Eq)
 
 data SignalRate
   = ARate
@@ -132,65 +122,3 @@ data Opcode
   | PassthroughOpcode StatementOpcode Signal
   | TerminalOpcode OrdinaryStatement
   deriving (Show, Ord, Eq)
-
-data Instrument = Instrument Opcode Integer
-  deriving (Show, Ord, Eq)
-
-data InstrumentStatement = InstrumentStatement
-  { instrumentNumber       :: Double
-  , instrumentStartingTime :: Double
-  , instrumentDurationTime :: Double
-  , instrumentParameters   :: [Double]
-  }
-  deriving Show
-
-data FunctionTableStatement = FunctionTableStatement
-  { functionTableNumber               :: Integer
-  , functionTableActionTime           :: Integer
-  , functionTableSize                 :: Integer
-  , functionTableGenRoutine           :: Integer
-  , functionTableGenRoutineParameters :: [Double]
-  }
-  deriving Show
-
-data ScoreStatement
-  = IStatement InstrumentStatement
-  | FStatement FunctionTableStatement
-
-data Csd = Csd
-  { csdOptions                   :: Text
-  , csdOrchestraHeaderStatements :: Map Text Text
-  , csdInstruments               :: [Instrument]
-  , csdScore                     :: [ScoreStatement]
-  }
-
-
-data InstrumentLine = InstrumentLine
-  { instrumentExpressionOutputIds :: [Text]
-  , instrumentExpressionBody      :: Text
-  , instrumentExpressionId        :: Integer
-  }
-  deriving (Show, Ord, Eq)
-
-data InstrumentState = InstrumentState
-  { instrumentLines :: [InstrumentLine]
-  , opcodeBindings  :: Map Opcode [Text]
-  , includedOpcodes :: Set Text
-  , customUdos      :: Set Udo
-  }
-  deriving (Show, Ord, Eq)
-
-data ConditionalBlock = ConditionalBlock
-  { conditionalLines           :: [InstrumentLine]
-  , conditionalOpcodeOutputIds :: [Text]
-  , conditionalIncludedOpcodes :: Set Text
-  , conditionalCustomUdos      :: Set Udo
-  }
-
-
-data Sound = Sound
-  { soundStartTime  :: Double
-  , soundDuration   :: Double
-  , soundParameters :: Map Text Double
-  }
-  deriving Show

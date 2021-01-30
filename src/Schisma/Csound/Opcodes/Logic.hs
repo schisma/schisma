@@ -9,7 +9,18 @@ module Schisma.Csound.Opcodes.Logic
 
 import           Data.Text                      ( Text )
 
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Signals   ( ARateSignal(..)
+                                                , Conditional(..)
+                                                , ContainsSignals(..)
+                                                , IRateSignal(..)
+                                                , IsSignal(..)
+                                                , KRateSignal(..)
+                                                , Opcode(ConditionalExpression)
+                                                , OrdinaryStatement
+                                                  ( ConditionalStatement
+                                                  )
+                                                , Signal(Signal)
+                                                )
 
 class (IsSignal a) => Comparator a where
   -- | Compares two signals for equality.
@@ -678,20 +689,16 @@ instance CompoundLogicExpression [IRateSignal]  where
 
 
 ifAndS
-  :: ( Conditional
-     , Conditional )       -- ^ @conditionals@ - The conditional clauses.
-  -> ( OrdinaryStatement
-     , OrdinaryStatement ) -- ^ @(ifStatement, elseStatement)@ - The
+  :: (Conditional, Conditional)       -- ^ @conditionals@ - The conditional clauses.
+  -> (OrdinaryStatement, OrdinaryStatement) -- ^ @(ifStatement, elseStatement)@ - The
                            --   ordinary statement to return within each
                            --   logical branch.
   -> OrdinaryStatement     -- ^ The returned ordinary statement.
 ifAndS = compoundPredicateStatement "&&"
 
 ifOrS
-  :: ( Conditional
-     , Conditional )       -- ^ @conditionals@ - The conditional clauses.
-  -> ( OrdinaryStatement
-     , OrdinaryStatement ) -- ^ @(ifStatement, elseStatement)@ - The
+  :: (Conditional, Conditional)       -- ^ @conditionals@ - The conditional clauses.
+  -> (OrdinaryStatement, OrdinaryStatement) -- ^ @(ifStatement, elseStatement)@ - The
                            --   ordinary statement to return within each
                            --   logical branch.
   -> OrdinaryStatement     -- ^ The returned ordinary statement.
@@ -751,6 +758,6 @@ compoundPredicateStatement
   -> (OrdinaryStatement, OrdinaryStatement)
   -> OrdinaryStatement
 compoundPredicateStatement operator conditionals statementOpcodes = statement
-  where
-    conditional = CompoundPredicate operator conditionals
-    statement   = ConditionalStatement conditional statementOpcodes
+ where
+  conditional = CompoundPredicate operator conditionals
+  statement   = ConditionalStatement conditional statementOpcodes

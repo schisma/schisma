@@ -4,14 +4,19 @@ module Schisma.Csound.Opcodes.MidiConverters
   , cpsmidi
   , midiAmplitudeAndFrequency
   , rawMidiAmplitudeAndFrequency
-  )
-where
+  ) where
 
 import           Schisma.Csound.SignalGenerators
                                                 ( i#
                                                 , makeOpcodeSignal
                                                 )
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Signals   ( IRateSignal
+                                                , IsSignal(getSignal)
+                                                , KRateSignal(..)
+                                                , Opcode(IncludedOpcode)
+                                                , Signal(Signal)
+                                                , SignalRate(KRate)
+                                                )
 
 -- | Get the note number of the current MIDI event, expressed in
 --   cycles-per-second.
@@ -71,4 +76,3 @@ rawMidiAmplitudeAndFrequency channel = map toSignal [1, 2] where
   args     = [getSignal channel]
   opcode   = IncludedOpcode "rawMidiAmplitudeAndFrequency" args [KRate, KRate]
   toSignal = KRateSignal . Signal opcode
-

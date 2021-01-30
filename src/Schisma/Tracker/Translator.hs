@@ -1,28 +1,52 @@
 module Schisma.Tracker.Translator
   ( trackerToScore
-  )
-where
+  ) where
 
-import           Data.Map.Strict                ( Map
-                                                , (!)
-                                                , empty
-                                                )
 import           Data.List                      ( foldl'
                                                 , scanl'
                                                 , zip3
                                                 )
+import           Data.Map.Strict                ( (!)
+                                                , Map
+                                                , empty
+                                                )
 import           Data.Text                      ( Text )
 
 import           Schisma.Utilities              ( listDifference
-                                                , merge
                                                 , mapWithIndex
+                                                , merge
                                                 )
 
 import           Schisma.Csound.Score           ( soundToIStatement )
 
-import           Schisma.Csound.Types
-
-import           Schisma.Tracker.Types
+import           Schisma.Csound.Types.Score     ( ScoreStatement
+                                                , Sound(..)
+                                                )
+import           Schisma.Tracker.Types          ( CellMappers
+                                                  ( cellFrequencyMapper
+                                                  , cellParameterRenamer
+                                                  )
+                                                , InstrumentTrack
+                                                  ( InstrumentTrack
+                                                  , trackerTrackIsMute
+                                                  , trackerTrackIsSolo
+                                                  )
+                                                , MasterCell(..)
+                                                , MasterSetting
+                                                  ( BeatsPerMinute
+                                                  , LinesPerBeat
+                                                  )
+                                                , MasterSettingsState(..)
+                                                , NoteCell(..)
+                                                , Tracker(..)
+                                                , TrackerFileConfiguration
+                                                  ( trackerCellMappers
+                                                  , trackerInstrumentParameters
+                                                  , trackerInstruments
+                                                  , trackerLineConstraints
+                                                  )
+                                                , TrackerPlaybackState(..)
+                                                )
 
 -- | Converts the @tracker@ and associated @trackerConfiguration@ to a set
 --   of score statements.
@@ -33,10 +57,10 @@ trackerToScore
   -> [ScoreStatement]         -- ^ The score statements.
 trackerToScore tracker trackerConfiguration = score
  where
-  cellMappers = trackerCellMappers trackerConfiguration
-  instruments = trackerInstruments trackerConfiguration
+  cellMappers          = trackerCellMappers trackerConfiguration
+  instruments          = trackerInstruments trackerConfiguration
   instrumentParameters = trackerInstrumentParameters trackerConfiguration
-  lineConstraints = trackerLineConstraints trackerConfiguration
+  lineConstraints      = trackerLineConstraints trackerConfiguration
 
   instrumentSounds =
     trackerToInstrumentSounds cellMappers tracker lineConstraints

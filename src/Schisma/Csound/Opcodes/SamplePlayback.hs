@@ -18,7 +18,16 @@ import           Schisma.Csound.SignalGenerators
                                                 , makeOpcodeSignal
                                                 , makeOpcodeSignals
                                                 )
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Signals   ( ARateSignal(..)
+                                                , IRateSignal(..)
+                                                , IsSignal(..)
+                                                , KRateSignal
+                                                , Opcode(IncludedOpcode)
+                                                , SRateSignal
+                                                , Signal(Signal)
+                                                , SignalRate(ARate, IRate)
+                                                , StatementOpcode(..)
+                                                )
 
 class (IsSignal a) => SFPlayer a where
   -- | Plays a SoundFont2 (SF2) sample preset, generating a stereo sound.

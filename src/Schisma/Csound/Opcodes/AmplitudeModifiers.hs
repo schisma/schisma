@@ -2,15 +2,17 @@ module Schisma.Csound.Opcodes.AmplitudeModifiers
   ( balance
   , balanceWithDefaults
   , compress2
-  )
-where
+  ) where
 
 import           Schisma.Csound.SignalGenerators
                                                 ( i#
                                                 , makeOpcodeSignal
                                                 )
-
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Signals   ( ARateSignal
+                                                , IRateSignal
+                                                , IsSignal(getSignal)
+                                                , KRateSignal
+                                                )
 
 -- | Adjust one audio signal according to the values of another.
 --

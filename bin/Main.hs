@@ -5,8 +5,8 @@ import           Prelude                 hiding ( concat
                                                 )
 
 
-import           Options.Applicative            ( Parser
-                                                , (<**>)
+import           Options.Applicative            ( (<**>)
+                                                , Parser
                                                 , command
                                                 , execParser
                                                 , fullDesc
@@ -23,30 +23,31 @@ import           Data.Aeson                     ( eitherDecodeFileStrict'
                                                 , encode
                                                 )
 
-import           Data.Maybe                     ( fromMaybe )
 import           Data.Map.Strict                ( empty )
-import           Schisma.Csound.Types
+import           Data.Maybe                     ( fromMaybe )
 
 
+import           Schisma.Csound.Types.Instruments
+                                                ( Instrument(Instrument) )
 
 
-import           Schisma.Tracker.Types          ( CellMappers(..)
-                                                , TrackerFileConfiguration(..)
-                                                )
 import           Schisma.Tracker.Mappers        ( defaultFrequencyMapper
                                                 , frequencyWithRandomDetuningMapper
                                                 , twelveTetA440ToFrequency
                                                 )
+import           Schisma.Tracker.Types          ( CellMappers(..)
+                                                , TrackerFileConfiguration(..)
+                                                )
 import           Schisma.Utilities              ( renameKeysFromMap )
 
-import           Schisma.IO                     ( playTrackerFile )
+import           Schisma.CLI.Synth              ( synthParameters )
 import           Schisma.CLI.Tracker            ( PlayTrackerOptions(..)
                                                 , TrackerJSON(..)
-                                                , toInstruments
-                                                , toInstrumentParameters
                                                 , playTrackerOptionsParser
+                                                , toInstrumentParameters
+                                                , toInstruments
                                                 )
-import           Schisma.CLI.Synth              ( synthParameters )
+import           Schisma.IO                     ( playTrackerFile )
 
 -- TODO: Doc
 
@@ -124,12 +125,12 @@ playTracker (PlayTrackerOptions trackerFile instrumentFile startingLine endingLi
           , cellParameterRenamer = renameKeysFromMap (parameterRenamings config)
           }
 
-    let instrumentsJson    = instruments config
+    let instrumentsJson     = instruments config
 
-    let trackerInstruments = map toInstruments instrumentsJson
-    let normalInstruments = concatMap fst trackerInstruments
+    let trackerInstruments  = map toInstruments instrumentsJson
+    let normalInstruments   = concatMap fst trackerInstruments
     let alwaysOnInstruments = concatMap snd trackerInstruments
-    let allInstruments = normalInstruments ++ alwaysOnInstruments
+    let allInstruments      = normalInstruments ++ alwaysOnInstruments
 
     let toInstrumentNumber (Instrument _ number) = number
 

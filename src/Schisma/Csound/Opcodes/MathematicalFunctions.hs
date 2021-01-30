@@ -1,13 +1,16 @@
 module Schisma.Csound.Opcodes.MathematicalFunctions
   ( MathematicalFunction(..)
-  )
-where
+  ) where
 
 import           Schisma.Csound.SignalGenerators
                                                 ( SignalGenerator
                                                 , makeOpcodeSignal
                                                 )
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Signals   ( ARateSignal
+                                                , IRateSignal
+                                                , IsSignal(..)
+                                                , KRateSignal
+                                                )
 
 class (IsSignal a, SignalGenerator a) => MathematicalFunction a where
   -- | Returns the absolute value of @x@.

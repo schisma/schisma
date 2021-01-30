@@ -3,14 +3,17 @@ module Schisma.Csound.Opcodes.RandomGenerators
   , NoiseGenerator(..)
   , RandomGenerator(..)
   , pinker
-  )
-where
+  ) where
 
 import           Schisma.Csound.SignalGenerators
                                                 ( SignalGenerator
                                                 , makeOpcodeSignal
                                                 )
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Signals   ( ARateSignal
+                                                , IRateSignal
+                                                , IsSignal(..)
+                                                , KRateSignal
+                                                )
 
 class (SignalGenerator a) => DistributionRandomGenerator a where
   -- | Cauchy distribution random number generator. This is an x-class noise

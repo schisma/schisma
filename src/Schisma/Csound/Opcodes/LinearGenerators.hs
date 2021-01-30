@@ -9,7 +9,11 @@ import           Schisma.Csound.SignalGenerators
                                                 , k#
                                                 , makeOpcodeSignal
                                                 )
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Signals   ( ARateSignal
+                                                , IRateSignal
+                                                , IsSignal(getSignal)
+                                                , KRateSignal
+                                                )
 
 import           Schisma.Utilities              ( interleave )
 

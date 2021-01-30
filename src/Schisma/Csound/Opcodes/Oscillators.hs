@@ -8,8 +8,7 @@ module Schisma.Csound.Opcodes.Oscillators
   , osciliktpWithDefaults
   , vco2
   , vco2WithDefaults
-  )
-where
+  ) where
 
 import           Schisma.Csound.SignalGenerators
                                                 ( SignalGenerator
@@ -17,7 +16,11 @@ import           Schisma.Csound.SignalGenerators
                                                 , k#
                                                 , makeOpcodeSignal
                                                 )
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Signals   ( ARateSignal
+                                                , IRateSignal
+                                                , IsSignal(..)
+                                                , KRateSignal
+                                                )
 
 class (SignalGenerator a) => LowFrequencyOscillator a where
   -- | A low frequency oscillator of various shapes.

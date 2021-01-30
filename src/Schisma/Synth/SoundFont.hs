@@ -38,8 +38,16 @@ import           Schisma.Csound.Opcodes.SamplePlayback
                                                 , sfplayForTiedNotes
                                                 , sfpreset
                                                 )
-import           Schisma.Csound.Types
-import           Schisma.Synth.Types
+import           Schisma.Csound.Types.Signals   ( ARateSignal
+                                                , IRateSignal
+                                                , KRateSignal
+                                                , SRateSignal
+                                                )
+import           Schisma.Synth.Types            ( SynthParameter
+                                                  ( SynthParameter
+                                                  , synthParameterName
+                                                  )
+                                                )
 
 import           Schisma.Utilities              ( merge )
 
@@ -48,11 +56,7 @@ import           Schisma.Utilities              ( merge )
 -- Determines the envelope based on the documentation provided on page 33
 -- of https://www.synthfont.com/sfspec24.pdf.
 adsrEnvelope
-  :: IRateSignal
-  -> IRateSignal
-  -> IRateSignal
-  -> IRateSignal
-  -> KRateSignal
+  :: IRateSignal -> IRateSignal -> IRateSignal -> IRateSignal -> KRateSignal
 adsrEnvelope attack decay sustain release = envelope where
   scaledAttack  = scaleEnvelopeParameter attack
   scaledDecay   = scaleEnvelopeParameter decay

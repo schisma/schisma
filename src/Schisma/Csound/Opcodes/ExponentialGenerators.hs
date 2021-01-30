@@ -1,14 +1,17 @@
 module Schisma.Csound.Opcodes.ExponentialGenerators
   ( ExponentialGenerator(..)
   , expcurve
-  )
-where
+  ) where
 
 import           Schisma.Csound.SignalGenerators
                                                 ( SignalGenerator
                                                 , makeOpcodeSignal
                                                 )
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Signals   ( ARateSignal
+                                                , IRateSignal
+                                                , IsSignal(getSignal)
+                                                , KRateSignal
+                                                )
 
 class (SignalGenerator a) => ExponentialGenerator a where
   -- | Trace an exponential curve between specified points.

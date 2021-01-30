@@ -9,7 +9,14 @@ import           Schisma.Csound.SignalGenerators
                                                 ( SignalGenerator
                                                 , makeOpcodeSignal
                                                 )
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Signals   ( ARateSignal
+                                                , IRateSignal(..)
+                                                , IsSignal(..)
+                                                , KRateSignal
+                                                , Opcode(IncludedOpcode)
+                                                , Signal(Signal)
+                                                , SignalRate(IRate)
+                                                )
 
 class (IsSignal a, SignalGenerator b) => Assignment a b where
   -- | Performs a simple assignment.

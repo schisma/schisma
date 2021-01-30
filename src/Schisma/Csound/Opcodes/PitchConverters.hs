@@ -7,7 +7,10 @@ import           Schisma.Csound.SignalGenerators
                                                 , i#
                                                 , makeOpcodeSignal
                                                 )
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Signals   ( IRateSignal
+                                                , IsSignal(..)
+                                                , KRateSignal
+                                                )
 
 class (IsSignal a, SignalGenerator a) => Cps a where
   -- | Converts a MIDI note number value to cycles-per-second.

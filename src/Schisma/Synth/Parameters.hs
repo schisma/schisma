@@ -7,15 +7,14 @@ import           Data.Map.Strict                ( Map )
 
 import           Data.Text                      ( Text )
 
-import qualified Schisma.Synth.SoundFont as SoundFont
+import qualified Schisma.Synth.SoundFont       as SoundFont
                                                 ( synthParameters )
 
 import qualified Schisma.Synth.Emulations.Profit
                                                as Profit
                                                 ( synthParameters )
 
-import           Schisma.Csound.Types
-import           Schisma.Synth.Types
+import           Schisma.Synth.Types            ( SynthParameter )
 
 -- | Retrieves the parameters of the Profit synthesizer.
 profit :: [SynthParameter] -- ^ The synth parameters.

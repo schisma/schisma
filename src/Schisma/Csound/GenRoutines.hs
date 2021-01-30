@@ -3,8 +3,7 @@ module Schisma.Csound.GenRoutines
   , gen05
   , gen07
   , gen08
-  )
-where
+  ) where
 
 import           Schisma.Utilities              ( interleave )
 
@@ -13,7 +12,7 @@ import           Schisma.Csound.Opcodes.FunctionTables
 
 import           Schisma.Csound.SignalGenerators
                                                 ( i# )
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Signals   ( IRateSignal )
 
 
 -- | Transfers data into a function table.

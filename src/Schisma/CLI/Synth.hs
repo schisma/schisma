@@ -12,8 +12,7 @@ import           Schisma.Synth.Parameters       ( profit
                                                 , soundFont
                                                 )
 
-import           Schisma.Csound.Types
-import           Schisma.Synth.Types
+import           Schisma.Synth.Types            ( SynthParameter )
 
 
 synthParameters :: Map Text [SynthParameter]

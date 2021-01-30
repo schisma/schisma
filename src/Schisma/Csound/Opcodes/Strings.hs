@@ -5,7 +5,9 @@ module Schisma.Csound.Opcodes.Strings
 
 import           Schisma.Csound.SignalGenerators
                                                 ( makeOpcodeSignal )
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Signals   ( IsSignal(getSignal)
+                                                , SRateSignal
+                                                )
 
 -- | Concatenate two strings. 'strcat' runs at i-time only.
 --

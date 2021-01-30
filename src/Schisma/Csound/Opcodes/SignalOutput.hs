@@ -1,6 +1,9 @@
 module Schisma.Csound.Opcodes.SignalOutput where
 
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Signals   ( ARateSignal
+                                                , IsSignal(getSignal)
+                                                , StatementOpcode(..)
+                                                )
 
 -- | Writes audio data to an external device or stream.
 --

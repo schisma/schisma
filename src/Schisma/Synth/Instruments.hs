@@ -56,7 +56,12 @@ import           Schisma.Csound.Opcodes.TableQueries
 
 import           Schisma.Csound.GenRoutines     ( gen02 )
 
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Instruments
+                                                ( Instrument(..) )
+import           Schisma.Csound.Types.Signals   ( KRateSignal
+                                                , Opcode(TerminalOpcode)
+                                                , OrdinaryStatement(NoOp, Op)
+                                                )
 
 midiTrigger :: Map Text KRateSignal -> Integer -> Integer -> Instrument
 midiTrigger parameters midiChannel instrumentNumber = Instrument

@@ -1,9 +1,9 @@
 module Schisma.Synth.Utilities where
 
 import           Schisma.Csound.Opcodes.Arithmetic
-                                                ( (+#)
+                                                ( (*#)
+                                                , (+#)
                                                 , (-#)
-                                                , (*#)
                                                 , (/#)
                                                 , (^#)
                                                 )
@@ -13,7 +13,10 @@ import           Schisma.Csound.SignalGenerators
                                                 ( i#
                                                 , k#
                                                 )
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Signals   ( ARateSignal
+                                                , IRateSignal
+                                                , KRateSignal
+                                                )
 
 -- | Blends a list of signals by scaling them equivalently.
 blend

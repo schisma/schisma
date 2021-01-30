@@ -8,7 +8,11 @@ import           Prelude                 hiding ( print )
 
 import           Schisma.Csound.SignalGenerators
                                                 ( i# )
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Signals   ( IRateSignal
+                                                , IsSignal(getSignal)
+                                                , KRateSignal
+                                                , StatementOpcode(..)
+                                                )
 
 -- | Prints i-rate values.
 --

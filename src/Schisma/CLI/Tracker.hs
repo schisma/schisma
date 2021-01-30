@@ -32,13 +32,14 @@ import           Options.Applicative            ( Parser
 
 import           Data.List                      ( foldl' )
 
+import           Schisma.Csound.Types.Instruments
+                                                ( Instrument )
+
 import           Schisma.Synth.Instruments      ( midiProfit
                                                 , midiSoundFontPlayer
                                                 , profit
                                                 , soundFontPlayer
                                                 )
-
-import           Schisma.Csound.Types
 
 -- TODO: Doc
 

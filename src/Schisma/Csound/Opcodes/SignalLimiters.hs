@@ -1,13 +1,16 @@
 module Schisma.Csound.Opcodes.SignalLimiters
   ( Limiter(..)
-  )
-where
+  ) where
 
 import           Schisma.Csound.SignalGenerators
                                                 ( SignalGenerator
                                                 , makeOpcodeSignal
                                                 )
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Signals   ( ARateSignal
+                                                , IRateSignal
+                                                , IsSignal(..)
+                                                , KRateSignal
+                                                )
 
 class (IsSignal a, IsSignal b, SignalGenerator c) => Limiter a b c where
   -- | Sets the lower and upper limits of the value it processes.

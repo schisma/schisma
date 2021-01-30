@@ -52,7 +52,7 @@ import           Schisma.Csound.SignalGenerators
                                                 , makeRatedSignal
                                                 , pi#
                                                 )
-import           Schisma.Csound.Types           ( ARateSignal(..)
+import           Schisma.Csound.Types.Signals   ( ARateSignal(..)
                                                 , IRateSignal
                                                 , IsSignal(getSignal)
                                                 , KRateSignal
@@ -83,11 +83,7 @@ import           Schisma.Utilities              ( merge )
 -- TODO: Doc
 
 adsrEnvelope
-  :: IRateSignal
-  -> IRateSignal
-  -> IRateSignal
-  -> IRateSignal
-  -> KRateSignal
+  :: IRateSignal -> IRateSignal -> IRateSignal -> IRateSignal -> KRateSignal
 adsrEnvelope attack decay sustain release = envelope where
   scaledAttack  = scaleEnvelopeKnob attack
   scaledDecay   = scaleEnvelopeKnob decay

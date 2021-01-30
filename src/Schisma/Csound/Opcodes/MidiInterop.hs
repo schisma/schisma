@@ -1,11 +1,18 @@
 module Schisma.Csound.Opcodes.MidiInterop
   ( MidiInteroperability(..)
-  )
-where
+  ) where
 
 import           Schisma.Csound.SignalGenerators
-                                                ( SignalGenerator, i# )
-import           Schisma.Csound.Types
+                                                ( SignalGenerator
+                                                , i#
+                                                )
+import           Schisma.Csound.Types.Signals   ( ARateSignal(..)
+                                                , IRateSignal(..)
+                                                , IsSignal(getSignal)
+                                                , KRateSignal(..)
+                                                , Opcode(MutatingOpcode)
+                                                , Signal(Signal)
+                                                )
 
 class (SignalGenerator a, SignalGenerator b) => MidiInteroperability a b where
   -- | Gets a MIDI control change value.
@@ -57,7 +64,8 @@ instance MidiInteroperability ARateSignal ARateSignal where
   midicontrolchange controller value low high =
     (ARateSignal $ Signal opcode 1, ARateSignal $ Signal opcode 2)
    where
-    args   = [getSignal controller, getSignal value, getSignal low, getSignal high]
+    args =
+      [getSignal controller, getSignal value, getSignal low, getSignal high]
     opcode = MutatingOpcode "midicontrolchange" args [0, 1]
 
   midicontrolchangeWithDefaults controller value =
@@ -73,7 +81,8 @@ instance MidiInteroperability ARateSignal KRateSignal where
   midicontrolchange controller value low high =
     (ARateSignal $ Signal opcode 1, KRateSignal $ Signal opcode 2)
    where
-    args   = [getSignal controller, getSignal value, getSignal low, getSignal high]
+    args =
+      [getSignal controller, getSignal value, getSignal low, getSignal high]
     opcode = MutatingOpcode "midicontrolchange" args [0, 1]
 
   midicontrolchangeWithDefaults controller value =
@@ -89,7 +98,8 @@ instance MidiInteroperability ARateSignal IRateSignal where
   midicontrolchange controller value low high =
     (ARateSignal $ Signal opcode 1, IRateSignal $ Signal opcode 2)
    where
-    args   = [getSignal controller, getSignal value, getSignal low, getSignal high]
+    args =
+      [getSignal controller, getSignal value, getSignal low, getSignal high]
     opcode = MutatingOpcode "midicontrolchange" args [0, 1]
 
   midicontrolchangeWithDefaults controller value =
@@ -105,7 +115,8 @@ instance MidiInteroperability KRateSignal ARateSignal where
   midicontrolchange controller value low high =
     (KRateSignal $ Signal opcode 1, ARateSignal $ Signal opcode 2)
    where
-    args   = [getSignal controller, getSignal value, getSignal low, getSignal high]
+    args =
+      [getSignal controller, getSignal value, getSignal low, getSignal high]
     opcode = MutatingOpcode "midicontrolchange" args [0, 1]
 
   midicontrolchangeWithDefaults controller value =
@@ -121,7 +132,8 @@ instance MidiInteroperability KRateSignal KRateSignal where
   midicontrolchange controller value low high =
     (KRateSignal $ Signal opcode 1, KRateSignal $ Signal opcode 2)
    where
-    args   = [getSignal controller, getSignal value, getSignal low, getSignal high]
+    args =
+      [getSignal controller, getSignal value, getSignal low, getSignal high]
     opcode = MutatingOpcode "midicontrolchange" args [0, 1]
 
   midicontrolchangeWithDefaults controller value =
@@ -137,7 +149,8 @@ instance MidiInteroperability KRateSignal IRateSignal where
   midicontrolchange controller value low high =
     (KRateSignal $ Signal opcode 1, IRateSignal $ Signal opcode 2)
    where
-    args   = [getSignal controller, getSignal value, getSignal low, getSignal high]
+    args =
+      [getSignal controller, getSignal value, getSignal low, getSignal high]
     opcode = MutatingOpcode "midicontrolchange" args [0, 1]
 
   midicontrolchangeWithDefaults controller value =
@@ -153,7 +166,8 @@ instance MidiInteroperability IRateSignal ARateSignal where
   midicontrolchange controller value low high =
     (IRateSignal $ Signal opcode 1, ARateSignal $ Signal opcode 2)
    where
-    args   = [getSignal controller, getSignal value, getSignal low, getSignal high]
+    args =
+      [getSignal controller, getSignal value, getSignal low, getSignal high]
     opcode = MutatingOpcode "midicontrolchange" args [0, 1]
 
   midicontrolchangeWithDefaults controller value =
@@ -169,7 +183,8 @@ instance MidiInteroperability IRateSignal KRateSignal where
   midicontrolchange controller value low high =
     (IRateSignal $ Signal opcode 1, KRateSignal $ Signal opcode 2)
    where
-    args   = [getSignal controller, getSignal value, getSignal low, getSignal high]
+    args =
+      [getSignal controller, getSignal value, getSignal low, getSignal high]
     opcode = MutatingOpcode "midicontrolchange" args [0, 1]
 
   midicontrolchangeWithDefaults controller value =
@@ -185,7 +200,8 @@ instance MidiInteroperability IRateSignal IRateSignal where
   midicontrolchange controller value low high =
     (IRateSignal $ Signal opcode 1, IRateSignal $ Signal opcode 2)
    where
-    args   = [getSignal controller, getSignal value, getSignal low, getSignal high]
+    args =
+      [getSignal controller, getSignal value, getSignal low, getSignal high]
     opcode = MutatingOpcode "midicontrolchange" args [0, 1]
 
   midicontrolchangeWithDefaults controller value =

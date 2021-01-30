@@ -5,8 +5,7 @@ module Schisma.Csound.Opcodes.SoftwareBus
   , chnsetks
   , xin
   , xout
-  )
-where
+  ) where
 
 
 import           Schisma.Utilities              ( mapWithIndex )
@@ -15,7 +14,16 @@ import           Schisma.Csound.SignalGenerators
                                                 ( SignalGenerator
                                                 , makeOpcodeSignal
                                                 )
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Signals   ( ARateSignal
+                                                , IRateSignal
+                                                , IsSignal(..)
+                                                , KRateSignal
+                                                , Opcode(Opcode)
+                                                , SRateSignal
+                                                , Signal(Signal)
+                                                , SignalRate
+                                                , StatementOpcode(..)
+                                                )
 
 class (SignalGenerator a) => ChannelGet a where
   -- | Reads data from a channel of the inward named software bus.

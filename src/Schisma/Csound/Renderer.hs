@@ -53,8 +53,52 @@ import           Schisma.Csound.Orchestra       ( opcodeToInstrumentState
                                                 , ratePrefix
                                                 )
 
+import           Schisma.Csound.Types.Compilation
+                                                ( InstrumentLine
+                                                  ( instrumentExpressionBody
+                                                  , instrumentExpressionId
+                                                  , instrumentExpressionOutputIds
+                                                  )
+                                                , InstrumentState
+                                                  ( customUdos
+                                                  , includedOpcodes
+                                                  , instrumentLines
+                                                  )
+                                                )
+import           Schisma.Csound.Types.Csound    ( Csd
+                                                  ( csdInstruments
+                                                  , csdOptions
+                                                  , csdOrchestraHeaderStatements
+                                                  , csdScore
+                                                  )
+                                                )
+import           Schisma.Csound.Types.Instruments
+                                                ( Instrument(Instrument) )
+import           Schisma.Csound.Types.Score     ( FunctionTableStatement
+                                                  ( functionTableActionTime
+                                                  , functionTableGenRoutine
+                                                  , functionTableGenRoutineParameters
+                                                  , functionTableNumber
+                                                  , functionTableSize
+                                                  )
+                                                , InstrumentStatement
+                                                  ( instrumentDurationTime
+                                                  , instrumentNumber
+                                                  , instrumentParameters
+                                                  , instrumentStartingTime
+                                                  )
+                                                , ScoreStatement(..)
+                                                )
+import           Schisma.Csound.Types.Signals   ( Udo
+                                                  ( udoControlPeriodSamples
+                                                  , udoInputRates
+                                                  , udoName
+                                                  , udoOpcode
+                                                  , udoOutputRates
+                                                  )
+                                                )
+
 import           ProjectPaths                   ( getIncludesDir )
-import           Schisma.Csound.Types
 
 
 -- | Contains the default orchestra header statements. Values are derived

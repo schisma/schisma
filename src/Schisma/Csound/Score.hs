@@ -2,17 +2,37 @@ module Schisma.Csound.Score
   ( alwaysOnIStatement
   , fZeroStatement
   , soundToIStatement
-  )
-where
+  ) where
 
-import           Data.Map.Strict                ( elems
-                                                , Map
+import           Data.Map.Strict                ( Map
+                                                , elems
                                                 )
 import           Data.Text                      ( Text )
 
 import           Schisma.Utilities              ( merge )
 
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Score     ( FunctionTableStatement
+                                                  ( FunctionTableStatement
+                                                  , functionTableActionTime
+                                                  , functionTableGenRoutine
+                                                  , functionTableGenRoutineParameters
+                                                  , functionTableNumber
+                                                  , functionTableSize
+                                                  )
+                                                , InstrumentStatement
+                                                  ( InstrumentStatement
+                                                  , instrumentDurationTime
+                                                  , instrumentNumber
+                                                  , instrumentParameters
+                                                  , instrumentStartingTime
+                                                  )
+                                                , ScoreStatement(..)
+                                                , Sound
+                                                  ( soundDuration
+                                                  , soundParameters
+                                                  , soundStartTime
+                                                  )
+                                                )
 
 -- | Creates an "i statement" that results in an instrument being always
 --   on.
@@ -22,7 +42,7 @@ alwaysOnIStatement
   :: Integer        -- ^ @number@ - The instrument number.
   -> ScoreStatement -- ^ The "i statement".
 alwaysOnIStatement number = IStatement instrumentStatement where
-  instrumentStatement  = InstrumentStatement
+  instrumentStatement = InstrumentStatement
     { instrumentNumber       = fromIntegral number
     , instrumentStartingTime = -1
     , instrumentDurationTime = 604800
@@ -65,4 +85,3 @@ soundToIStatement (number, parameters) sound = IStatement instrumentStatement wh
     , instrumentDurationTime = soundDuration sound
     , instrumentParameters   = elems instrumentParameters
     }
-

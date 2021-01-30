@@ -7,14 +7,17 @@ module Schisma.Csound.Opcodes.Filters
   , toneWithDefaults
   , tonek
   , tonekWithDefaults
-  )
-where
+  ) where
 
 import           Schisma.Csound.SignalGenerators
                                                 ( i#
                                                 , makeOpcodeSignal
                                                 )
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Signals   ( ARateSignal
+                                                , IRateSignal
+                                                , IsSignal(..)
+                                                , KRateSignal
+                                                )
 
 class (IsSignal a) => BiquadFilter a where
   -- | A sweepable general purpose biquadratic digital filter.

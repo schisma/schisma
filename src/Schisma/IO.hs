@@ -5,24 +5,32 @@ module Schisma.IO
   , playWithVirtualMidi
   ) where
 
+import           Data.Map.Strict                ( Map
+                                                , empty
+                                                )
+import           Data.Text                      ( Text )
 import           System.Directory               ( getTemporaryDirectory )
 import           System.FilePath                ( (</>)
                                                 , takeBaseName
                                                 )
 import           System.Process                 ( callCommand )
-import           Data.Map.Strict                ( empty
-                                                , Map
-                                                )
-import           Data.Text                      ( Text )
 
-import           Schisma.Csound.Types
+import           Schisma.Csound.Opcodes.SignalOutput
+                                                ( out )
+
 import           Schisma.Csound.Score           ( alwaysOnIStatement
                                                 , fZeroStatement
                                                 , soundToIStatement
                                                 )
 
-import           Schisma.Csound.Opcodes.SignalOutput
-                                                ( out )
+import           Schisma.Csound.Types.Csound    ( Csd(..) )
+import           Schisma.Csound.Types.Instruments
+                                                ( Instrument(Instrument) )
+import           Schisma.Csound.Types.Score     ( Sound )
+import           Schisma.Csound.Types.Signals   ( ARateSignal
+                                                , Opcode(TerminalOpcode)
+                                                , OrdinaryStatement(Op)
+                                                )
 
 
 import           Schisma.Tracker.Parser         ( parseTrackerFile )
@@ -92,12 +100,13 @@ playTrackerFile headerStatements alwaysOnInstrumentNumbers file trackerConfigura
   = do
     tracker <- parseTrackerFile file
 
-    let options = "-odac -+rtmidi=portmidi -Ma"
-    let header  = merge defaultOrchestraHeaderStatements headerStatements
+    let options      = "-odac -+rtmidi=portmidi -Ma"
+    let header       = merge defaultOrchestraHeaderStatements headerStatements
 
     let trackerScore = trackerToScore tracker trackerConfiguration
     let instruments  = trackerInstruments trackerConfiguration
-    let score = map alwaysOnIStatement alwaysOnInstrumentNumbers ++ trackerScore
+    let score =
+          map alwaysOnIStatement alwaysOnInstrumentNumbers ++ trackerScore
     let csd = Csd { csdOptions                   = options
                   , csdOrchestraHeaderStatements = header
                   , csdInstruments               = instruments

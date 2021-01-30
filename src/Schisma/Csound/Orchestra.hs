@@ -3,27 +3,26 @@ module Schisma.Csound.Orchestra
   , ratePrefix
   ) where
 
-import           Prelude                 hiding ( concat
-                                                )
+import           Prelude                 hiding ( concat )
 
+import           Data.Containers.ListUtils      ( nubOrd )
 import           Data.List                      ( drop
                                                 , foldl'
                                                 , scanl'
                                                 , take
                                                 )
-import           Data.Map.Strict                ( Map
+import           Data.Map.Strict                ( (!)
+                                                , Map
                                                 , elems
                                                 , empty
                                                 , member
                                                 , singleton
-                                                , (!)
                                                 )
 import           Data.Set                       ( Set
                                                 , empty
                                                 , singleton
                                                 , union
                                                 )
-import           Data.Containers.ListUtils      ( nubOrd )
 import           Data.Text                      ( Text
                                                 , append
                                                 , concat
@@ -36,7 +35,29 @@ import           Data.Text                      ( Text
 import           Data.Text.Read                 ( decimal )
 
 
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Compilation
+                                                ( ConditionalBlock(..)
+                                                , InstrumentLine
+                                                  ( InstrumentLine
+                                                  , instrumentExpressionId
+                                                  , instrumentExpressionOutputIds
+                                                  )
+                                                , InstrumentState(..)
+                                                )
+import           Schisma.Csound.Types.Signals   ( Conditional(..)
+                                                , Opcode(..)
+                                                , OrdinaryStatement(..)
+                                                , Signal
+                                                  ( outputNumber
+                                                  , outputOpcode
+                                                  )
+                                                , SignalRate(..)
+                                                , StatementOpcode
+                                                  ( StatementOpcode
+                                                  )
+                                                , Udo(udoName, udoOutputRates)
+                                                )
+
 import           Schisma.Utilities              ( listDifference
                                                 , merge
                                                 )

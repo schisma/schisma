@@ -7,13 +7,20 @@ module Schisma.Csound.Utilities
 import           Data.List                      ( foldl' )
 import           Data.Text                      ( Text )
 
-import           Schisma.Csound.SignalGenerators
-                                                ( SignalGenerator )
-import           Schisma.Csound.Types
-
 import           Schisma.Csound.Opcodes.Display ( printkWithDefaults )
 import           Schisma.Csound.Opcodes.MidiEventExtenders
                                                 ( xtratim )
+import           Schisma.Csound.SignalGenerators
+                                                ( SignalGenerator )
+import           Schisma.Csound.Types.Signals   ( ARateSignal(..)
+                                                , IRateSignal(..)
+                                                , IsSignal(getSignal)
+                                                , KRateSignal(..)
+                                                , Opcode(PassthroughOpcode)
+                                                , Signal(Signal)
+                                                , StatementOpcode
+                                                )
+
 
 class (SignalGenerator a) => Passthrough a where
   -- | Passes a signal through along with a StatementOpcode. Because

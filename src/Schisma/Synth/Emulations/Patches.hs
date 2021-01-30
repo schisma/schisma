@@ -1,7 +1,6 @@
 module Schisma.Synth.Emulations.Patches
   ( patchFieldsToPFieldParameters
-  )
-where
+  ) where
 
 import           Data.List                      ( foldl' )
 import           Data.Map.Strict                ( Map
@@ -20,7 +19,7 @@ import           Schisma.Csound.SignalGenerators
                                                 ( i#
                                                 , pi#
                                                 )
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Signals   ( IRateSignal )
 
 import           Schisma.Utilities              ( merge )
 

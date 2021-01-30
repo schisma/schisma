@@ -1,9 +1,11 @@
 module Schisma.Csound.Opcodes.MidiEventExtenders
   ( xtratim
-  )
-where
+  ) where
 
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Signals   ( IRateSignal
+                                                , IsSignal(getSignal)
+                                                , StatementOpcode(..)
+                                                )
 
 -- | Extend the duration of real-time generated events.
 --

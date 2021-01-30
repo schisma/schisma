@@ -5,14 +5,17 @@ module Schisma.Csound.Opcodes.SampleLevelOperators
   , downsampWithDefaults
   , fold
   , upsamp
-  )
-where
+  ) where
 
 import           Schisma.Csound.SignalGenerators
                                                 ( i#
                                                 , makeOpcodeSignal
                                                 )
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Signals   ( ARateSignal
+                                                , IRateSignal
+                                                , IsSignal(..)
+                                                , KRateSignal
+                                                )
 
 class (IsSignal a) => KRateConverter a where
   -- | Converts a i-rate parameter to an k-rate value. Or converts an

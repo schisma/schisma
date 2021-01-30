@@ -2,7 +2,12 @@ module Schisma.Csound.Opcodes.InstrumentInvocation
   ( Event(..)
   ) where
 
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Signals   ( IRateSignal
+                                                , IsSignal(..)
+                                                , KRateSignal
+                                                , SRateSignal
+                                                , StatementOpcode(..)
+                                                )
 
 class (IsSignal a) => Event a where
   -- | Generates a score event from an instrument.

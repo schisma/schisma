@@ -11,7 +11,14 @@ import           Schisma.Csound.SignalGenerators
                                                 , i#
                                                 , makeOpcodeSignal
                                                 )
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Signals   ( ARateSignal(..)
+                                                , IRateSignal
+                                                , IsSignal(getSignal)
+                                                , KRateSignal(..)
+                                                , Opcode(IncludedOpcode)
+                                                , Signal(Signal)
+                                                , SignalRate(ARate, KRate)
+                                                )
 
 class (SignalGenerator a) => EnvelopeGenerator a where
   -- | Calculates the classical ADSR envelope using linear segments.

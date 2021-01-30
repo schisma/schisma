@@ -1,11 +1,13 @@
 module Schisma.Csound.Opcodes.TableQueries
   ( ftlen
   , nsamp
-  )
-where
+  ) where
 
-import           Schisma.Csound.SignalGenerators (makeOpcodeSignal)
-import           Schisma.Csound.Types
+import           Schisma.Csound.SignalGenerators
+                                                ( makeOpcodeSignal )
+import           Schisma.Csound.Types.Signals   ( IRateSignal
+                                                , IsSignal(getSignal)
+                                                )
 
 -- | Returns the size (number of points, excluding guard point) of stored
 --   function table, number @ftn@.  While most units referencing a stored

@@ -2,7 +2,10 @@ module Schisma.Csound.Opcodes.InstrumentDuration
   ( turnoff2
   ) where
 
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Signals   ( IsSignal(getSignal)
+                                                , KRateSignal
+                                                , StatementOpcode(..)
+                                                )
 
 -- | Turn off instance(s) of other instruments at performance time.
 --

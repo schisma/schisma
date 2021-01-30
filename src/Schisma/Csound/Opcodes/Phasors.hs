@@ -1,8 +1,7 @@
 module Schisma.Csound.Opcodes.Phasors
   ( Phasor(..)
   , SyncPhasor(..)
-  )
-where
+  ) where
 
 import           Schisma.Csound.SignalGenerators
                                                 ( SignalGenerator
@@ -10,7 +9,11 @@ import           Schisma.Csound.SignalGenerators
                                                 , makeOpcodeSignal
                                                 , makeOpcodeSignals
                                                 )
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Signals   ( ARateSignal
+                                                , IRateSignal
+                                                , IsSignal(..)
+                                                , KRateSignal
+                                                )
 
 class (IsSignal a, SignalGenerator b) => Phasor a b where
   -- | Produce a normalized moving phase value.

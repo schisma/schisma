@@ -11,7 +11,13 @@ import           Schisma.Csound.SignalGenerators
                                                 , makeOpcodeSignal
                                                 , makeOpcodeSignals
                                                 )
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Signals   ( IRateSignal
+                                                , IsSignal(..)
+                                                , KRateSignal(..)
+                                                , Opcode(IncludedOpcode)
+                                                , Signal(Signal)
+                                                , SignalRate(KRate)
+                                                )
 
 class (IsSignal a, SignalGenerator a) => Ctrl7 a where
   -- | Allows a floating-point 7-bit MIDI signal scaled with a minimum and

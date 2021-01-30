@@ -1,10 +1,20 @@
 module Schisma.Csound.Opcodes.Arithmetic
   ( Arithmetic(..)
   , Exponentiation(..)
-  )
-where
+  ) where
 
-import           Schisma.Csound.Types
+import           Schisma.Csound.Types.Signals   ( ARateSignal(..)
+                                                , IRateSignal(..)
+                                                , IsSignal(..)
+                                                , KRateSignal(..)
+                                                , Opcode(BinaryOperator)
+                                                , Signal(Signal)
+                                                , SignalRate
+                                                  ( ARate
+                                                  , IRate
+                                                  , KRate
+                                                  )
+                                                )
 
 class (IsSignal a, IsSignal b, IsSignal c) => Arithmetic a b c | a b -> c where
   -- | Adds two signals together.

@@ -3,23 +3,24 @@ module Schisma.Tracker.Types where
 import           Data.Map.Strict                ( Map )
 import           Data.Text                      ( Text )
 
-import           Schisma.Csound.Types           ( Instrument
-                                                , Sound
-                                                )
+import           Schisma.Csound.Types.Instruments
+                                                ( Instrument )
+import           Schisma.Csound.Types.Score     ( Sound )
 
 data NoteCell
   = NoteOn Text (Map Text Double)
-  --       pitch  instrument effects
+  --       pitch instrument effects
   | NoteOff
   | NoteBlank (Map Text Double)
   --          instrument effects
   deriving (Show, Ord, Eq)
 
 data MasterSettingsState = MasterSettingsState
-  { trackerTuning :: Text
-  , trackerTemperament :: Text
+  { trackerTuning         :: Text
+  , trackerTemperament    :: Text
   , trackerBeatsPerMinute :: Double
-  , trackerLinesPerBeat :: Double }
+  , trackerLinesPerBeat   :: Double
+  }
   deriving (Show, Ord, Eq)
 
 data MasterSetting
@@ -43,34 +44,33 @@ data HeaderCell
 
 data InstrumentTrack = InstrumentTrack
   { trackerTrackInstrumentNumber :: Integer
-  , trackerTrackIsMute :: Bool
-  , trackerTrackIsSolo :: Bool
-  , trackerTrackNotes :: [NoteCell]
+  , trackerTrackIsMute           :: Bool
+  , trackerTrackIsSolo           :: Bool
+  , trackerTrackNotes            :: [NoteCell]
   }
   deriving (Show, Ord, Eq)
 
 data CellMappers = CellMappers
-  { cellFrequencyMapper :: Integer -> Text -> Text -> Text -> Map Text Double
+  { cellFrequencyMapper  :: Integer -> Text -> Text -> Text -> Map Text Double
   , cellParameterRenamer :: Map Text Double -> Map Text Double
   }
 
-data Tracker
-  = Tracker [Integer] [MasterCell] [InstrumentTrack]
-  --        line #    master track instrument tracks
+data Tracker = Tracker [Integer] [MasterCell] [InstrumentTrack]
+  --                   line #    master track instrument tracks
   deriving (Show, Ord, Eq)
 
 data TrackerPlaybackState = TrackerPlaybackState
-  { trackerPlaybackTimeElapsed :: Double
-  , trackerPlaybackPriorSounds :: [Sound]
-  , trackerPlaybackPriorLineNumber :: Integer
+  { trackerPlaybackTimeElapsed              :: Double
+  , trackerPlaybackPriorSounds              :: [Sound]
+  , trackerPlaybackPriorLineNumber          :: Integer
   , trackerPlaybackPriorMasterSettingsState :: MasterSettingsState
-  , trackerPriorNoteConcluded :: Bool
-  , trackerPriorPitch :: Maybe Text
+  , trackerPriorNoteConcluded               :: Bool
+  , trackerPriorPitch                       :: Maybe Text
   }
 
 data TrackerFileConfiguration = TrackerFileConfiguration
-  { trackerCellMappers :: CellMappers
-  , trackerInstruments :: [Instrument]
+  { trackerCellMappers          :: CellMappers
+  , trackerInstruments          :: [Instrument]
   , trackerInstrumentParameters :: Map Integer (Map Text Double)
-  , trackerLineConstraints :: (Integer, Integer)
+  , trackerLineConstraints      :: (Integer, Integer)
   }
