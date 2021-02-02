@@ -1,5 +1,6 @@
 module Schisma.Utilities
-  ( inputOutputTypes
+  ( foldlWithIndex
+  , inputOutputTypes
   , interleave
   , listDifference
   , listIntersect
@@ -14,10 +15,9 @@ module Schisma.Utilities
 
 import           Prelude                 hiding ( lookup )
 
-import           Data.Typeable                  ( Typeable
-                                                , typeOf
+import           Data.List                      ( foldl'
+                                                , transpose
                                                 )
-import           Data.List                      ( transpose )
 import qualified Data.Map.Merge.Strict         as Map
                                                 ( merge
                                                 , preserveMissing
@@ -36,12 +36,32 @@ import           Data.Set                       ( Set
                                                 , member
                                                 , notMember
                                                 )
+import           Data.Typeable                  ( Typeable
+                                                , typeOf
+                                                )
 
 import           Data.Containers.ListUtils      ( nubOrd )
 import           Data.Text                      ( Text
                                                 , pack
                                                 , splitOn
                                                 )
+
+-- | Folds over a Foldable type, providing the index of each element with each
+--   iteration.
+--
+-- ==== __Examples__
+--
+-- >>> foldlWithIndex (\acc idx val -> acc + idx + val) 0 [10, 11, 12]
+-- 36
+foldlWithIndex
+  :: Foldable t1
+  => (t2 -> Int -> a -> t2) -- ^ @f@ - The function to apply to each element of
+                            --   @xs@.
+  -> t2                     -- ^ @z@ - The starting accumulator value.
+  -> t1 a                   -- ^ @xs@ - The foldable collection to fold over.
+  -> t2                     -- ^ The folded result.
+foldlWithIndex f z xs =
+  foldl' (\g x i -> f (g (i - 1)) i x) (const z) xs (length xs - 1)
 
 -- | Introspects the type signature of a value and splits it into its
 -- inputs and output.
@@ -110,9 +130,7 @@ listIntersect
   => [a] -- ^ @a@ - The first list.
   -> [a] -- ^ @b@ - The second list.
   -> [a] -- ^ The list containing elements commong to @a@ and @b@.
-listIntersect a b = filter (`member` bSet) a
-  where
-    bSet = Data.Set.fromList b
+listIntersect a b = filter (`member` bSet) a where bSet = Data.Set.fromList b
 
 -- | Performs a list union.
 --

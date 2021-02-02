@@ -53,7 +53,7 @@ class (IsSignal a, SignalGenerator b) => Table a b where
       , getSignal wrap
       ]
 
-  -- | 'tableWithDefaults' is identical to 'table with default values supplied
+  -- | 'tableWithDefaults' is identical to 'table' with default values supplied
   --   for @mode@ (@'i#' 0@), @offset@ (@'i#' 0@), and @wrap@ (@'i#' 0@).
   --
   --   <https://csound.com/docs/manual/table.html Csound documentation>

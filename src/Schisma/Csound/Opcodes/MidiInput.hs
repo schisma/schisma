@@ -3,6 +3,7 @@ module Schisma.Csound.Opcodes.MidiInput
   , isMidiNotePlaying
   , midiChannelMatches
   , midiin
+  , triggerMidiNote
   ) where
 
 import           Schisma.Csound.SignalGenerators
@@ -118,3 +119,35 @@ midiin :: [KRateSignal] -- ^ The returned signals. The first signal is the
                         --   The third and fourth signals contain values
                         --   that are based on the specific MIDI message.
 midiin = makeOpcodeSignals "midiin" [] 4
+
+-- | Triggers an instrument on or off, depending on the MIDI event
+--   received. This opcode has support for sustain pedals.
+--
+--   Note that @eventParametersFtn@ is expanded to an array and fed to
+--   'schedulek'. This means that the first three elements must contain the
+--   instrument number (p1), the start time (p2), and the duration (p3).
+--   The remaining elements are passed as normal p-fields in an "i"
+--   statement.
+--
+--   @notesStateFtn@ should contain 258 elements:
+--
+--   * Index 0 should contain the instrument number.
+--   * Indices 1-128 will be used to maintain state about held notes.
+--   * Indices 129-256 will be used to maintain state about sustained
+--     notes.
+--   * Index 257 will be used to maintain state about the sustain pedal
+--     (i.e., whether it's on or off).
+--
+--   The reason both tables need the instrument number is to prevent having
+--   opcodes like 'ftgenonce' reusing the same tables across different
+--   instrument instances.
+triggerMidiNote
+  :: KRateSignal -- ^ @channel@ - The channel to check.
+  -> IRateSignal -- ^ @eventParametersFtn@ - The number of the function table
+                 --   containing the event parameters.
+  -> IRateSignal -- ^ @notesStateFtn@ - The number of the function table
+                 --   containing the states of held and sustained notes.
+  -> Opcode      -- ^ The returned opcode.
+triggerMidiNote channel eventParametersFtn notesStateFtn = opcode where
+  args   = getSignal channel : map getSignal [eventParametersFtn, notesStateFtn]
+  opcode = IncludedOpcode "triggerMidiNote" args []

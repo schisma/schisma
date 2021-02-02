@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 854f75424cf0baa85a0c594c4c588e0758149a4d40703f42900853c0957bcac9
+-- hash: 0cdc535026c2ca3cc34fef1c04b138ed0270c51204b94a507921778d3fa7fb6d
 
 name:           schisma
 version:        0.0.1.0
@@ -28,6 +28,7 @@ data-files:
     includes/midiChannelMatches.udo
     includes/rawMidiAmplitudeAndFrequency.udo
     includes/sfplayForTiedNotes.udo
+    includes/triggerMidiNote.udo
     includes/tieStatus.udo
 data-dir:       data
 

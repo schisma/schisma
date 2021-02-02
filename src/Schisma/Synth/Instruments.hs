@@ -38,64 +38,54 @@ import           Schisma.Csound.Opcodes.Arithmetic
                                                 ( (*#)
                                                 , (+#)
                                                 )
-import           Schisma.Csound.Opcodes.InstrumentDuration
-                                                ( turnoff2 )
-import           Schisma.Csound.Opcodes.InstrumentInvocation
-                                                ( Event(..) )
-import           Schisma.Csound.Opcodes.Logic   ( ifEqualS )
 import           Schisma.Csound.Opcodes.MidiInput
-                                                ( isMidiNotePlaying
-                                                , midiChannelMatches
-                                                )
+                                                ( triggerMidiNote )
 import           Schisma.Csound.Opcodes.SampleLevelOperators
                                                 ( i )
 import           Schisma.Csound.Opcodes.SignalOutput
                                                 ( out )
-import           Schisma.Csound.Opcodes.TableQueries
-                                                ( ftlen )
+import           Schisma.Csound.Opcodes.TableReadWriteOperations
+                                                ( tablewWithDefaults )
 
 import           Schisma.Csound.GenRoutines     ( gen02 )
+import           Schisma.Csound.Utilities       ( passthrough )
 
 import           Schisma.Csound.Types.Instruments
                                                 ( Instrument(..) )
 import           Schisma.Csound.Types.Signals   ( KRateSignal
                                                 , Opcode(TerminalOpcode)
-                                                , OrdinaryStatement(NoOp, Op)
+                                                , OrdinaryStatement(Op)
                                                 )
+
+import           Schisma.Utilities              ( foldlWithIndex )
 
 midiTrigger :: Map Text KRateSignal -> Integer -> Integer -> Instrument
 midiTrigger parameters midiChannel instrumentNumber = Instrument
   opcode
   sourceInstrumentNumber where
 
-  [playing, noteNumber]  = isMidiNotePlaying (k# midiChannel)
-
-  targetInstrumentNumber = k# instrumentNumber +# (noteNumber *# k# 0.000001)
-  eventOnParameters      = elems parameters
-
-  table                  = gen02 False (map i eventOnParameters)
-
   -- NOTE: We're setting the duration to -1000000000 so that opcode
   -- tieStatus correctly classifies this note as a standalone note, and not
   -- as an initial note within a group of tied notes. This is important
   -- because any initial notes won't have any release segments attached to
   -- them, whereas standalone notes do.
-  turnOn                 = event (stringSignal "i")
-                                 targetInstrumentNumber
-                                 (k# 0)
-                                 (k# (-1000000000))
-                                 eventOnParameters
+  duration                = -1000000000
+  nonRatedEventParameters = [instrumentNumber, 0, duration]
+  eventOnParameters       = map k# nonRatedEventParameters ++ elems parameters
 
-  turnOff        = turnoff2 targetInstrumentNumber (k# 12) (k# 1)
+  notesStateParameters    = i# instrumentNumber : replicate 257 (i# 0)
 
-  turnOnOrOff    = ifEqualS (playing, k# 1) (Op turnOn, Op turnOff)
+  eventOnParameterTable =
+    gen02 False (map i# nonRatedEventParameters ++ map i (elems parameters))
 
-  checkIfPlaying = ifEqualS (playing, k# 0) (NoOp, turnOnOrOff)
+  tableWrite ftn index signal =
+    passthrough ftn (tablewWithDefaults signal (k# index) eventOnParameterTable)
+  eventTable =
+    foldlWithIndex tableWrite eventOnParameterTable eventOnParameters
 
-  trigger        = ifEqualS (ftlen table   , i# (length eventOnParameters))
-                            (checkIfPlaying, NoOp)
+  notesStateTable = gen02 False notesStateParameters
 
-  opcode                 = TerminalOpcode trigger
+  opcode = triggerMidiNote (k# midiChannel) eventTable notesStateTable
   sourceInstrumentNumber = instrumentNumber + 1000
 
 -- | Transforms the Profit synthesizer into a Csound Instrument. The

@@ -15,6 +15,7 @@ data-files:
 - "includes/midiChannelMatches.udo"
 - "includes/rawMidiAmplitudeAndFrequency.udo"
 - "includes/sfplayForTiedNotes.udo"
+- "includes/triggerMidiNote.udo"
 - "includes/tieStatus.udo"
 
 default-extensions:

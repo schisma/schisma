@@ -1,14 +1,100 @@
 module Schisma.Csound.Opcodes.TableReadWriteOperations
-  ( tabmorphak
+  ( TableW(..)
+  , tabmorphak
   ) where
 
 import           Schisma.Csound.SignalGenerators
-                                                ( makeOpcodeSignal )
+                                                ( i#
+                                                , makeOpcodeSignal
+                                                )
 import           Schisma.Csound.Types.Signals   ( ARateSignal
                                                 , IRateSignal
                                                 , IsSignal(getSignal)
                                                 , KRateSignal
+                                                , StatementOpcode(..)
                                                 )
+
+class (IsSignal a) => TableW a where
+  -- | Change the contents of existing function tables.
+  --
+  --   This opcode operates on existing function tables, changing their
+  --   contents. 'tablew' is for writing at k- or at a-rates, with the table
+  --   number being specified at init time. Using 'tablew' with i-rate signal
+  --   and index values is allowed, but the specified data will always be
+  --   written to the function table at k-rate, not during the
+  --   initialization pass.
+  --
+  --   <https://csound.com/docs/manual/tablew.html Csound documentation>
+  tablew
+    :: a               -- ^ @signal@ - The value to be written into the table.
+    -> a               -- ^ @index@ - The table index. When @indexMode@ is @0@,
+                       --   this must be a positive number whose upper
+                       --   bound cannot exceed (@table length - 1@). When
+                       --   @indexMode@ is not @0@, this value must be
+                       --   constrained to a @0@ to
+                       --   @1@ range.
+    -> IRateSignal     -- ^ @ftn@ - The function table number. Must be @>= 1@.
+                       --   Floats are rounded down to an integer. If a table
+                       --   number does not point to a valid table, or the
+                       --   table has not yet been loaded, then an error will
+                       --   result and the instrument will be de-activated.
+    -> IRateSignal     -- ^ @indexMode@ - The index data mode.
+                       --
+                       --   * If @0@, @index@ and @offset@ ranges match the
+                       --     length of the table.
+                       --   * If not @0@, @index@ and @offset@ have a @0@ to
+                       --     @1@ range.
+    -> IRateSignal     -- ^ @offset@ - The amount by which @index@ is to be
+                       --   offset.
+                       --
+                       --   * If @0@, indexing starts from the start of the
+                       --     table.
+                       --   * If not @0@, indexing starts from somewhere else
+                       --     in the table. The value must be less than the
+                       --     table length if @index@ is @0@, or less than @1@
+                       --     if @index@ is not @0@.
+    -> IRateSignal     -- ^ @wrapGuardpointMode@ - The wrap and guardpoint
+                       --   mode. Can be one of the following values:
+                       --
+                       --   * 0: Limit mode
+                       --   * 1: Wrap mode
+                       --   * 2: Guardpoint mode
+    -> StatementOpcode -- ^ The returned signal.
+  tablew signal index ftn indexMode offset wrapGuardpointMode = StatementOpcode "tablew" args where
+    args =
+      [ getSignal signal
+      , getSignal index
+      , getSignal ftn
+      , getSignal indexMode
+      , getSignal offset
+      , getSignal wrapGuardpointMode
+      ]
+
+  -- | 'tablewWithDefaults' is identical to 'tablew' with default values
+  --   supplied for @indexMode@ (@'i#' 0@), @offset@ (@'i#' 0@), and
+  --   @wrapGuardpointMode@ (@'i#' 0@).
+  --
+  --   <https://csound.com/docs/manual/tablew.html Csound documentation>
+  tablewWithDefaults
+    :: a               -- ^ @signal@ - The value to be written into the table.
+    -> a               -- ^ @index@ - The table index. When @indexMode@ is @0@,
+                       --   this must be a positive number whose upper
+                       --   bound cannot exceed (@table length - 1@). When
+                       --   @indexMode@ is not @0@, this value must be
+                       --   constrained to a @0@ to
+                       --   @1@ range.
+    -> IRateSignal     -- ^ @ftn@ - The function table number. Must be @>= 1@.
+                       --   Floats are rounded down to an integer. If a table
+                       --   number does not point to a valid table, or the
+                       --   table has not yet been loaded, then an error will
+                       --   result and the instrument will be de-activated.
+    -> StatementOpcode -- ^ The returned signal.
+  tablewWithDefaults signal index ftn = tablew signal index ftn (i# 0) (i# 0) (i# 0)
+
+instance TableW ARateSignal
+instance TableW KRateSignal
+instance TableW IRateSignal
+
 
 -- | 'tabmorphak' allows morphing between a set of tables of the same size,
 --   by means of a weighted average between two currently selected tables.
