@@ -60,8 +60,6 @@ dependencies:
 
 library:
   source-dirs: src
-  other-modules:
-    - Paths_schisma
 
 tests:
   schisma-test:

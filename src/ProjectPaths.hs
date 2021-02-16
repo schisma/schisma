@@ -1,15 +1,7 @@
 module ProjectPaths
   ( getIncludesDir
-  )
-where
+  ) where
 
-import           System.FilePath                ( (</>) )
-
-import Data.Text (Text, pack)
-
-import           Paths_schisma                  ( getDataDir )
-
-getIncludesDir :: IO Text
+getIncludesDir :: IO FilePath
 getIncludesDir = do
-  dataDir <- getDataDir
-  return $ pack (dataDir </> "includes/")
+  return "includes/"

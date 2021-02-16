@@ -35,6 +35,7 @@ import           Data.Text                      ( Text
                                                 , strip
                                                 , unpack
                                                 )
+import           Data.Text.IO                   ( readFile )
 import           Data.Text.Prettyprint.Doc      ( Doc
                                                 , concatWith
                                                 , hardline
@@ -138,15 +139,13 @@ renderCsd csd filename = do
   let ((udos, udoBlocks), includes) =
         foldl' toUdoBlocksAndIncludes ((empty, []), empty) instrumentStates
 
-  includesDir <- getIncludesDir
-  let includesFiles         = Data.Set.map (append includesDir) includes
-  let includeStatementLines = Data.Set.map toIncludeStatementLine includesFiles
+  includeBlocks <- mapM toIncludeBlock (toList includes)
 
-  let scoreStatementLines   = Data.List.map toScoreStatementLine (csdScore csd)
+  let scoreStatementLines = Data.List.map toScoreStatementLine (csdScore csd)
 
   let doc = toCsd options
                   header
-                  (toList includeStatementLines)
+                  includeBlocks
                   udoBlocks
                   instrumentBlocks
                   scoreStatementLines
@@ -194,9 +193,12 @@ toFunctionTableStatementLine functionTableStatement = pack line
     Data.List.map show (Data.List.map fromInteger [p1, p2, p3, p4] ++ pRest)
   line = "f" ++ Data.List.unwords params
 
-toIncludeStatementLine :: Text -> Text
-toIncludeStatementLine filename =
-  "#include \"" `append` filename `append` ".udo\""
+toIncludeBlock :: Text -> IO Text
+toIncludeBlock include = do
+  includesDir <- getIncludesDir
+  let relativeFilename = includesDir </> unpack (include `append` ".udo")
+  filename <- getDataFileName relativeFilename
+  Data.Text.IO.readFile filename
 
 -- | Converts the @number@ and @lines@ to a Csound instrument block.
 toInstrumentBlock
