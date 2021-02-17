@@ -99,6 +99,7 @@ import           Schisma.Csound.Types.Signals   ( Udo
                                                   )
                                                 )
 
+import           Paths_schisma                  ( getDataFileName )
 import           ProjectPaths                   ( getIncludesDir )
 
 
