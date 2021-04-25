@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.34.3.
+-- This file has been generated from package.yaml by hpack version 0.34.4.
 --
 -- see: https://github.com/sol/hpack
 
@@ -105,7 +105,13 @@ library
       Paths_schisma
   hs-source-dirs:
       src
-  default-extensions: FlexibleContexts FlexibleInstances FunctionalDependencies MagicHash MultiParamTypeClasses OverloadedStrings
+  default-extensions:
+      FlexibleContexts
+      FlexibleInstances
+      FunctionalDependencies
+      MagicHash
+      MultiParamTypeClasses
+      OverloadedStrings
   build-depends:
       aeson
     , base >=4.7 && <5
@@ -132,7 +138,13 @@ executable schisma
       Paths_schisma
   hs-source-dirs:
       bin
-  default-extensions: FlexibleContexts FlexibleInstances FunctionalDependencies MagicHash MultiParamTypeClasses OverloadedStrings
+  default-extensions:
+      FlexibleContexts
+      FlexibleInstances
+      FunctionalDependencies
+      MagicHash
+      MultiParamTypeClasses
+      OverloadedStrings
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       aeson
@@ -166,7 +178,13 @@ test-suite schisma-test
       Paths_schisma
   hs-source-dirs:
       tests
-  default-extensions: FlexibleContexts FlexibleInstances FunctionalDependencies MagicHash MultiParamTypeClasses OverloadedStrings
+  default-extensions:
+      FlexibleContexts
+      FlexibleInstances
+      FunctionalDependencies
+      MagicHash
+      MultiParamTypeClasses
+      OverloadedStrings
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       aeson
