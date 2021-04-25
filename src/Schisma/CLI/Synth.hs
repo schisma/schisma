@@ -1,19 +1,16 @@
 module Schisma.CLI.Synth
-  ( synthParameters
+  ( synths
   ) where
 
-import           Data.Map.Strict                ( Map
-                                                , fromList
-                                                )
-
-import           Data.Text                      ( Text )
 
 import           Schisma.Synth.Parameters       ( profit
                                                 , soundFont
                                                 )
 
-import           Schisma.Synth.Types            ( SynthParameter )
+import           Schisma.Synth.Types            ( Synth(..) )
 
-
-synthParameters :: Map Text [SynthParameter]
-synthParameters = fromList [("Profit", profit), ("SoundFont", soundFont)]
+synths :: [Synth]
+synths =
+  [ Synth { synthName = "Profit", synthParameters = profit }
+  , Synth { synthName = "SoundFont", synthParameters = soundFont }
+  ]

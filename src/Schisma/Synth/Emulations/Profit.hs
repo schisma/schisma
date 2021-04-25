@@ -107,7 +107,7 @@ calculateFrequency frequency semitoneAdjustment fineTuningCentsAdjustment =
 
 defaultSettings :: Map Text IRateSignal
 defaultSettings = fromList settings where
-  toTuple (SynthParameter name _ _ _ _ defaultValue _) =
+  toTuple (SynthParameter name _ _ _ defaultValue _) =
     (name, i# defaultValue)
   settings = map toTuple synthParameters
 
@@ -212,7 +212,7 @@ midiSettings channel = fromList settings where
   [midiAmplitude, midiFrequency] = midiAmplitudeAndFrequency (k# channel)
   amplitude                      = ("amplitude", midiAmplitude)
   frequency                      = ("frequency", midiFrequency)
-  toTuple (SynthParameter name _ minimum maximum _ _ midiCCNumber) =
+  toTuple (SynthParameter name minimum maximum _ _ midiCCNumber) =
     ( name
     , ctrl7WithDefaults (i# channel) (i# midiCCNumber) (k# minimum) (k# maximum)
     )
@@ -527,95 +527,87 @@ synthFields =
 
 synthParameters :: [SynthParameter]
 synthParameters =
-  [ SynthParameter "oscillatorBFrequency" "Osc B Freq" (-24) 24 1 0 75
+  [ SynthParameter "oscillatorBFrequency" (-24) 24 1 0 75
   , SynthParameter "oscillatorBFineTuningCentsAdjustment"
-                   "Osc B Tuning"
                    (-50)
                    50
                    1
                    0
                    76
-  , SynthParameter "oscillatorBPulseWidth" "Osc B Pulse Width" 0 1 0 0.5 79
-  , SynthParameter "oscillatorBSawtooth"   "Osc B Sawtooth"    0 1 1 0   23
-  , SynthParameter "oscillatorBTriangle"   "Osc B Triangle"    0 1 1 1   24
-  , SynthParameter "oscillatorBPulse"      "Osc B Pulse"       0 1 1 0   25
-  , SynthParameter "oscillatorBLfo"        "Osc B LFO"         0 1 1 0   26
+  , SynthParameter "oscillatorBPulseWidth" 0 1 0 0.5 79
+  , SynthParameter "oscillatorBSawtooth"   0 1 1 0   23
+  , SynthParameter "oscillatorBTriangle"   0 1 1 1   24
+  , SynthParameter "oscillatorBPulse"      0 1 1 0   25
+  , SynthParameter "oscillatorBLfo"        0 1 1 0   26
   , SynthParameter "polyModSourceAmountFilterEnvelope"
-                   "Poly Mod Filter Amt"
                    0
                    1
                    0
                    0
                    27
   , SynthParameter "polyModSourceAmountOscillatorB"
-                   "Poly Mod Osc B Amt"
                    0
                    1
                    0
                    0
                    28
   , SynthParameter "polyModDestinationFrequencyA"
-                   "Poly Mod To Freq A"
                    0
                    1
                    1
                    0
                    29
-  , SynthParameter "polyModDestinationPulseWidthA" "Poly Mod to PW A" 0 1 1 0 30
-  , SynthParameter "polyModDestinationFilter" "Poly Mod to Filter" 0 1 1 0 31
-  , SynthParameter "lfoFrequency" "LFO Freq" 0 1 0 0 88
-  , SynthParameter "lfoShape" "LFO Shape" 0 3 1 0 90
-  , SynthParameter "wheelModSourceAmount" "Wheel Mod LFO Amt" 0 1 0 0 33
+  , SynthParameter "polyModDestinationPulseWidthA" 0 1 1 0 30
+  , SynthParameter "polyModDestinationFilter" 0 1 1 0 31
+  , SynthParameter "lfoFrequency" 0 1 0 0 88
+  , SynthParameter "lfoShape" 0 3 1 0 90
+  , SynthParameter "wheelModSourceAmount" 0 1 0 0 33
   , SynthParameter "wheelModDestinationFrequencyA"
-                   "Wheel Mod To Freq A"
                    0
                    1
                    1
                    0
                    34
   , SynthParameter "wheelModDestinationFrequencyB"
-                   "Wheel Mod To Freq B"
                    0
                    1
                    1
                    0
                    35
   , SynthParameter "wheelModDestinationPulseWidthA"
-                   "Wheel Mod To PW A"
                    0
                    1
                    1
                    0
                    36
   , SynthParameter "wheelModDestinationPulseWidthB"
-                   "Wheel Mod To PW B"
                    0
                    1
                    1
                    0
                    37
-  , SynthParameter "wheelModDestinationFilter" "Wheel Mod To Filter" 0 1 1 0 38
-  , SynthParameter "oscillatorAFrequency" "Osc A Freq" (-24) 24 1 0 67
-  , SynthParameter "oscillatorAPulseWidth" "Osc A Pulse Width" 0 1 0 0.5 71
-  , SynthParameter "oscillatorASawtooth" "Osc A Sawtooth" 0 1 1 1 20
-  , SynthParameter "oscillatorAPulse" "Osc A Pulse" 0 1 1 0 21
-  , SynthParameter "oscillatorASync" "Osc A Sync" 0 1 1 0 22
-  , SynthParameter "mixerOscillatorBLevel" "Osc B Level" 0 1 0 0.5 77
-  , SynthParameter "mixerOscillatorALevel" "Osc A Level" 0 1 0 0.5 69
-  , SynthParameter "mixerNoiseLevel" "Noise Level" 0 1 0 0 32
-  , SynthParameter "filterCutoffFrequency" "Filter CF" 0 1 0 0.5 102
-  , SynthParameter "filterResonance" "Filter Res" 0 25 0 10 103
-  , SynthParameter "filterEnvelopeAmount" "Filter Env" 0 1 0 0.5 105
-  , SynthParameter "filterKeyboardAmount" "Filter Kbd" 0 1 0 0.5 104
-  , SynthParameter "filterAttack" "Filter Att" 0 1 0 0.5 50
-  , SynthParameter "filterDecay" "Filter Dec" 0 1 0 0.5 51
-  , SynthParameter "filterSustain" "Filter Sus" 0 1 0 0.5 52
-  , SynthParameter "filterRelease" "Filter Rel" 0 1 0 0.5 53
-  , SynthParameter "amplifierAttack" "Amp Att" 0 1 0 0.05 43
-  , SynthParameter "amplifierDecay" "Amp Dec" 0 1 0 0.1 44
-  , SynthParameter "amplifierSustain" "Amp Sus" 0 1 0 0.4 45
-  , SynthParameter "amplifierRelease" "Amp Rel" 0 1 0 0.1 46
-  , SynthParameter "wheelModAmount" "Wheel Mod" 0 1 0 0 1
+  , SynthParameter "wheelModDestinationFilter" 0 1 1 0 38
+  , SynthParameter "oscillatorAFrequency" (-24) 24 1 0 67
+  , SynthParameter "oscillatorAPulseWidth" 0 1 0 0.5 71
+  , SynthParameter "oscillatorASawtooth" 0 1 1 1 20
+  , SynthParameter "oscillatorAPulse" 0 1 1 0 21
+  , SynthParameter "oscillatorASync" 0 1 1 0 22
+  , SynthParameter "mixerOscillatorBLevel" 0 1 0 0.5 77
+  , SynthParameter "mixerOscillatorALevel" 0 1 0 0.5 69
+  , SynthParameter "mixerNoiseLevel" 0 1 0 0 32
+  , SynthParameter "filterCutoffFrequency" 0 1 0 0.5 102
+  , SynthParameter "filterResonance" 0 25 0 10 103
+  , SynthParameter "filterEnvelopeAmount" 0 1 0 0.5 105
+  , SynthParameter "filterKeyboardAmount" 0 1 0 0.5 104
+  , SynthParameter "filterAttack" 0 1 0 0.5 50
+  , SynthParameter "filterDecay" 0 1 0 0.5 51
+  , SynthParameter "filterSustain" 0 1 0 0.5 52
+  , SynthParameter "filterRelease" 0 1 0 0.5 53
+  , SynthParameter "amplifierAttack" 0 1 0 0.05 43
+  , SynthParameter "amplifierDecay" 0 1 0 0.1 44
+  , SynthParameter "amplifierSustain" 0 1 0 0.4 45
+  , SynthParameter "amplifierRelease" 0 1 0 0.1 46
+  , SynthParameter "wheelModAmount" 0 1 0 0 1
   ]
 
 triangle :: KRateSignal -> KRateSignal -> KRateSignal -> ARateSignal

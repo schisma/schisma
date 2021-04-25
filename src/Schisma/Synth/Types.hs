@@ -1,7 +1,8 @@
 {-# LANGUAGE DeriveGeneric #-}
 
 module Schisma.Synth.Types
-  ( SynthParameter(..)
+  ( Synth(..)
+  , SynthParameter(..)
   ) where
 
 import           Prelude                 hiding ( drop )
@@ -22,9 +23,18 @@ import           Data.Text                      ( Text
                                                 )
 import           Data.Text.Manipulate           ( toCamel )
 
+data Synth = Synth
+  { synthName :: Text
+  , synthParameters :: [SynthParameter] }
+  deriving (Generic, Show, Ord, Eq)
+
+instance ToJSON Synth where
+  toJSON = genericToJSON defaultOptions
+    { fieldLabelModifier = unpack . toCamel . drop 5 . pack
+    }
+
 data SynthParameter = SynthParameter
   { synthParameterName         :: Text
-  , synthParameterDisplayName  :: Text
   , synthParameterMinimum      :: Double
   , synthParameterMaximum      :: Double
   , synthParameterStep         :: Double

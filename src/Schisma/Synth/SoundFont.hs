@@ -75,7 +75,7 @@ amplifierEnvelope settings = adsrEnvelope attack decay sustain release where
 
 defaultSettings :: Map Text IRateSignal
 defaultSettings = fromList settings where
-  toTuple (SynthParameter name _ _ _ _ defaultValue _) =
+  toTuple (SynthParameter name _ _ _ defaultValue _) =
     (name, i# defaultValue)
   settings = map toTuple synthParameters
 
@@ -84,7 +84,7 @@ midiSettings channel = fromList settings where
   [midiAmplitude, midiFrequency] = midiAmplitudeAndFrequency (k# channel)
   amplitude                      = ("amplitude", midiAmplitude)
   frequency                      = ("frequency", midiFrequency)
-  toTuple (SynthParameter name _ minimum maximum _ _ midiCCNumber) =
+  toTuple (SynthParameter name minimum maximum _ _ midiCCNumber) =
     ( name
     , ctrl7WithDefaults (i# channel) (i# midiCCNumber) (k# minimum) (k# maximum)
     )
@@ -136,11 +136,11 @@ synthFields =
 
 synthParameters :: [SynthParameter]
 synthParameters =
-  [ SynthParameter "amplifierAttack"  "Attack"   (-32768) 32768 1 0 43
-  , SynthParameter "amplifierDecay"   "Decay"    (-32768) 32678 1 0 44
-  , SynthParameter "amplifierRelease" "Release"  (-32768) 32678 1 0 45
-  , SynthParameter "amplifierSustain" "Sustain"  0        1000  0 0 46
-  , SynthParameter "bank"             "Bank"     0        128   1 0 0
-  , SynthParameter "program"          "Program"  0        127   1 0 70
-  , SynthParameter "velocity"         "Velocity" 0        127   1 0 75
+  [ SynthParameter "amplifierAttack"  (-32768) 32768 1 0 43
+  , SynthParameter "amplifierDecay"   (-32768) 32678 1 0 44
+  , SynthParameter "amplifierRelease" (-32768) 32678 1 0 45
+  , SynthParameter "amplifierSustain" 0        1000  0 0 46
+  , SynthParameter "bank"             0        128   1 0 0
+  , SynthParameter "program"          0        127   1 0 70
+  , SynthParameter "velocity"         0        127   1 0 75
   ]

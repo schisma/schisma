@@ -40,7 +40,7 @@ import           Schisma.Tracker.Types          ( CellMappers(..)
                                                 )
 import           Schisma.Utilities              ( renameKeysFromMap )
 
-import           Schisma.CLI.Synth              ( synthParameters )
+import           Schisma.CLI.Synth              ( synths )
 import           Schisma.CLI.Tracker            ( PlayTrackerOptions(..)
                                                 , TrackerJSON(..)
                                                 , playTrackerOptionsParser
@@ -59,7 +59,7 @@ data Command
 newtype TrackerCommand = Play PlayTrackerOptions
   deriving Show
 
-data SynthCommand = Parameters
+data SynthCommand = SynthList
   deriving Show
 
 
@@ -76,7 +76,7 @@ run (Tracker trackerCommand) = do
     (Play options) -> playTracker options
 run (Synth synthCommand) = do
   case synthCommand of
-    Parameters -> printSynthParameters
+    SynthList -> printSynthParameters
 
 parser :: Parser Command
 parser = hsubparser
@@ -87,9 +87,9 @@ parser = hsubparser
 synthParser :: Parser Command
 synthParser = Synth <$> hsubparser
   (command
-    "parameters"
-    (info (pure Parameters)
-          (progDesc "Retrieves the parameters for the supplied synth")
+    "list"
+    (info (pure SynthList)
+          (progDesc "Returns the list of available synths")
     )
   )
 
@@ -104,7 +104,7 @@ trackerParser = Tracker <$> hsubparser
 
 printSynthParameters :: IO ()
 printSynthParameters = do
-  putStrLn $ encode synthParameters
+  putStrLn $ encode synths
 
 playTracker :: PlayTrackerOptions -> IO ()
 playTracker (PlayTrackerOptions trackerFile instrumentFile startingLine endingLine)
