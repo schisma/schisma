@@ -71,10 +71,10 @@ main = run =<< execParser opts
     (fullDesc <> progDesc "A lightweight composition tool." <> header "schisma")
 
 run :: Command -> IO ()
-run (Tracker trackerCommand) = do
+run (Tracker trackerCommand) =
   case trackerCommand of
     (Play options) -> playTracker options
-run (Synth synthCommand) = do
+run (Synth synthCommand) =
   case synthCommand of
     SynthList -> printSynthParameters
 
@@ -103,8 +103,7 @@ trackerParser = Tracker <$> hsubparser
   )
 
 printSynthParameters :: IO ()
-printSynthParameters = do
-  putStrLn $ encode synths
+printSynthParameters = putStrLn $ encode synths
 
 playTracker :: PlayTrackerOptions -> IO ()
 playTracker (PlayTrackerOptions trackerFile instrumentFile startingLine endingLine)
