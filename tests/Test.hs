@@ -13,9 +13,7 @@ import           Integration.Csound.Opcodes.Reverberators
 main = defaultMain tests
 
 tests :: TestTree
--- TODO: Fix
---tests = testGroup "Tests" [integrationTests]
-tests = testGroup "Tests" []
+tests = testGroup "Tests" [integrationTests]
 
 integrationTests :: TestTree
 integrationTests = testGroup "Integration Tests" [opcodeTests]
