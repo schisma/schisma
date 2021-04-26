@@ -689,18 +689,22 @@ instance CompoundLogicExpression [IRateSignal]  where
 
 
 ifAndS
-  :: (Conditional, Conditional)       -- ^ @conditionals@ - The conditional clauses.
-  -> (OrdinaryStatement, OrdinaryStatement) -- ^ @(ifStatement, elseStatement)@ - The
-                           --   ordinary statement to return within each
-                           --   logical branch.
+  :: ( Conditional
+     , Conditional )       -- ^ @conditionals@ - The conditional clauses.
+  -> ( OrdinaryStatement
+     , OrdinaryStatement ) -- ^ @(ifStatement, elseStatement)@ - The ordinary
+                           --   statement to return within each logical
+                           --   branch.
   -> OrdinaryStatement     -- ^ The returned ordinary statement.
 ifAndS = compoundPredicateStatement "&&"
 
 ifOrS
-  :: (Conditional, Conditional)       -- ^ @conditionals@ - The conditional clauses.
-  -> (OrdinaryStatement, OrdinaryStatement) -- ^ @(ifStatement, elseStatement)@ - The
-                           --   ordinary statement to return within each
-                           --   logical branch.
+  :: ( Conditional
+     , Conditional )       -- ^ @conditionals@ - The conditional clauses.
+  -> ( OrdinaryStatement
+     , OrdinaryStatement ) -- ^ @(ifStatement, elseStatement)@ - The ordinary
+                           --   statement to return within each logical
+                           --   branch.
   -> OrdinaryStatement     -- ^ The returned ordinary statement.
 ifOrS = compoundPredicateStatement "||"
 
