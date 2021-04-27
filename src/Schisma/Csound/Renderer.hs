@@ -107,7 +107,8 @@ import           ProjectPaths                   ( getIncludesDir )
 --   from Csound defaults as well as common usage.
 --
 --   <https://csound.com/docs/manual/OrchTop.html Csound documentation>
-defaultOrchestraHeaderStatements :: Map Text Text -- ^ The map containing the header statements.
+defaultOrchestraHeaderStatements
+  :: Map Text Text -- ^ The map containing the header statements.
 defaultOrchestraHeaderStatements = fromList
   [ ("sr"     , "sr = 44100")
   , ("ksmps"  , "ksmps = 100")
