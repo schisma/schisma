@@ -6,6 +6,7 @@ module Schisma.IO
   ) where
 
 import           Data.Map.Strict                ( Map
+                                                , delete
                                                 , empty
                                                 )
 import           Data.Text                      ( Text )
@@ -55,7 +56,8 @@ midiCsd headerStatements useVirtual signals =
       options    = if useVirtual
         then "-odac -+rtmidi=virtual -M0"
         else "-odac -+rtmidi=portmidi -Ma"
-      header = merge defaultOrchestraHeaderStatements headerStatements
+      header = merge (delete "massign" defaultOrchestraHeaderStatements)
+                     headerStatements
   in  Csd { csdOptions                   = options
           , csdOrchestraHeaderStatements = header
           , csdInstruments               = [instrument]
@@ -128,8 +130,7 @@ playWithMidiDevice
   -> [ARateSignal] -- ^ @signals@ - The signals.
   -> IO ()         -- ^
 playWithMidiDevice headerStatements signals = do
-  let header = merge defaultOrchestraHeaderStatements headerStatements
-  let csd    = midiCsd header False signals
+  let csd      = midiCsd headerStatements False signals
   tmpDirectory <- getTemporaryDirectory
   let filename = tmpDirectory </> "midi_device.csd"
 
@@ -146,8 +147,7 @@ playWithVirtualMidi
   -> [ARateSignal] -- ^ @signals@ - The signals.
   -> IO ()         -- ^
 playWithVirtualMidi headerStatements signals = do
-  let header = merge defaultOrchestraHeaderStatements headerStatements
-  let csd    = midiCsd header True signals
+  let csd      = midiCsd headerStatements True signals
   tmpDirectory <- getTemporaryDirectory
   let filename = tmpDirectory </> "virtual_midi.csd"
 
