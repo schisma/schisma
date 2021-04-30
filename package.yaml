@@ -1,7 +1,7 @@
 name:                schisma
 version:             0.0.1.0
 github:              "schisma/schisma"
-license:             BSD3
+license:             MIT
 author:              "intercalations"
 maintainer:          "intercalations@protonmail.com"
 copyright:           "2018-2021 intercalations"

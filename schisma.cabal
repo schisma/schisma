@@ -12,7 +12,7 @@ bug-reports:    https://github.com/schisma/schisma/issues
 author:         intercalations
 maintainer:     intercalations@protonmail.com
 copyright:      2018-2021 intercalations
-license:        BSD3
+license:        MIT
 license-file:   LICENSE
 build-type:     Simple
 extra-source-files:
