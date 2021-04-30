@@ -13,6 +13,7 @@ author:         intercalations
 maintainer:     intercalations@protonmail.com
 copyright:      2018-2021 intercalations
 license:        BSD3
+license-file:   LICENSE
 build-type:     Simple
 extra-source-files:
     README.md
@@ -25,6 +26,7 @@ data-files:
     includes/midiAmplitudeAndFrequency.udo
     includes/midiChannelMatches.udo
     includes/rawMidiAmplitudeAndFrequency.udo
+    includes/round2.udo
     includes/sfplayForTiedNotes.udo
     includes/triggerMidiNote.udo
     includes/tieStatus.udo

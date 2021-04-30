@@ -6,10 +6,13 @@ import           Schisma.Csound.SignalGenerators
                                                 ( SignalGenerator
                                                 , makeOpcodeSignal
                                                 )
-import           Schisma.Csound.Types.Signals   ( ARateSignal
-                                                , IRateSignal
+import           Schisma.Csound.Types.Signals   ( ARateSignal(..)
+                                                , IRateSignal(..)
                                                 , IsSignal(..)
-                                                , KRateSignal
+                                                , KRateSignal(..)
+                                                , Opcode(IncludedOpcode)
+                                                , Signal(Signal)
+                                                , SignalRate(ARate, KRate, IRate)
                                                 )
 
 class (IsSignal a, SignalGenerator a) => MathematicalFunction a where
@@ -37,6 +40,26 @@ class (IsSignal a, SignalGenerator a) => MathematicalFunction a where
     -> a -- ^ The returned signal.
   log# x = makeOpcodeSignal "log" [getSignal x]
 
-instance MathematicalFunction ARateSignal
-instance MathematicalFunction KRateSignal
-instance MathematicalFunction IRateSignal
+  -- | Returns the integer nearest to @x@; if the fractional part of @x@ is
+  --   exactly 0.5, the number is rounded up.
+  round2#
+    :: a -- ^ @x@ - The input signal.
+    -> a -- ^ The returned signal.
+
+instance MathematicalFunction ARateSignal where
+  round2# x = ARateSignal signal where
+    args   = [getSignal x]
+    opcode = IncludedOpcode "round2" args [ARate]
+    signal = Signal opcode 1
+
+instance MathematicalFunction KRateSignal where
+  round2# x = KRateSignal signal where
+    args   = [getSignal x]
+    opcode = IncludedOpcode "round2" args [KRate]
+    signal = Signal opcode 1
+
+instance MathematicalFunction IRateSignal where
+  round2# x = IRateSignal signal where
+    args   = [getSignal x]
+    opcode = IncludedOpcode "round2" args [IRate]
+    signal = Signal opcode 1

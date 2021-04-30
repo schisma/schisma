@@ -37,6 +37,7 @@ import           Schisma.Csound.Opcodes         ( (*#)
                                                 , midiAmplitudeAndFrequency
                                                 , noise
                                                 , pinker
+                                                , round2#
                                                 , scaleWithDefaults
                                                 , syncphasor
                                                 , tival
@@ -198,7 +199,7 @@ lfoModule settings = oscillator where
   -- 1 = sawtooth
   -- 2 = triangle
   -- 3 = square
-  shape                 = settings ! "lfoShape"
+  shape                 = round2# (settings ! "lfoShape")
 
   triangleOrSquareCheck = ifEqualE (shape, i# 2) (i# 12, i# 10)
   baseMode              = ifEqualE (shape, i# 1) (i# 0, triangleOrSquareCheck)
