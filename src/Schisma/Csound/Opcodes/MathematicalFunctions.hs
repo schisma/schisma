@@ -40,8 +40,10 @@ class (IsSignal a, SignalGenerator a) => MathematicalFunction a where
     -> a -- ^ The returned signal.
   log# x = makeOpcodeSignal "log" [getSignal x]
 
-  -- | Returns the integer nearest to @x@; if the fractional part of @x@ is
-  --   exactly 0.5, the number is rounded up.
+  -- | Rounds @x@ using the "round half away from zero" method. When the
+  --   fraction of @x@ is not @0.5@, the number returned is the integer nearest
+  --   to @x@. When the fraction of @x@ is exactly 0.5, @x@ is rounded up
+  --   if it is positive or rounded down if it is negative.
   round2#
     :: a -- ^ @x@ - The input signal.
     -> a -- ^ The returned signal.

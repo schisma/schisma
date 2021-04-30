@@ -1,10 +1,16 @@
 opcode round2, a, a
   aval xin
 
-  if (frac(k(aval)) >= 0.5) then
-    around = ceil(aval)
+  kval = k(aval)
+
+  if (frac(kval) == 0.5) then
+    if (kval < 0) then
+      around = floor(aval)
+    else
+      around = ceil(aval)
+    endif
   else
-    around = floor(aval)
+    around = round(aval)
   endif
 
   xout around
@@ -13,10 +19,14 @@ endop
 opcode round2, k, k
   kval xin
 
-  if (frac(kval) >= 0.5) then
-    kround = ceil(kval)
+  if (frac(kval) == 0.5) then
+    if (kval < 0) then
+      kround = floor(kval)
+    else
+      kround = ceil(kval)
+    endif
   else
-    kround = floor(kval)
+    kround = round(kval)
   endif
 
   xout kround
@@ -25,10 +35,14 @@ endop
 opcode round2, i, i
   ival xin
 
-  if (frac(ival) >= 0.5) then
-    iround = ceil(ival)
+  if (frac(ival) == 0.5) then
+    if (ival < 0) then
+      iround = floor(ival)
+    else
+      iround = ceil(ival)
+    endif
   else
-    iround = floor(ival)
+    iround = round(ival)
   endif
 
   xout iround
