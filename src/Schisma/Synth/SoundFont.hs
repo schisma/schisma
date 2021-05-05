@@ -100,7 +100,9 @@ player parameters fileSignal = output where
   presetIdentifier = sfpreset program bank fileIdentifier (i# 0)
 
   velocity         = settings ! "velocity"
-  amplitude        = settings ! "amplitude"
+  -- NOTE: The amplitude is scaled by the default value of 0dbfs (32768) in
+  -- order to prevent deafening volumes.
+  amplitude        = (settings ! "amplitude") /# i# 32768
   frequency        = settings ! "frequency"
 
   -- NOTE: When @frequencyFlag@ is 1, the frequency is determined not by
