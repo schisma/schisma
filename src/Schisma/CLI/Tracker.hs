@@ -96,7 +96,7 @@ playTrackerOptionsParser =
             "INT"
           )
 
-toInstruments :: InstrumentJSON -> ([Instrument], [Instrument])
+toInstruments :: InstrumentJSON -> [Instrument]
 toInstruments json = schismaInstrument
  where
   instrumentName    = instrument json
@@ -104,14 +104,14 @@ toInstruments json = schismaInstrument
   channel           = midiChannel json
   schismaInstrument = case instrumentName of
     "Profit" -> if channel /= 0
-      then ([profit instrumentNumber], [midiProfit channel instrumentNumber])
-      else ([profit instrumentNumber], [])
+      then [profit instrumentNumber, midiProfit channel instrumentNumber]
+      else [profit instrumentNumber]
     "SoundFont" -> if channel /= 0
       then
-        ( [soundFontPlayer (soundFontPath json) instrumentNumber]
-        , [midiSoundFontPlayer channel instrumentNumber]
-        )
-      else ([soundFontPlayer (soundFontPath json) instrumentNumber], [])
+        [ soundFontPlayer (soundFontPath json) instrumentNumber
+        , midiSoundFontPlayer channel instrumentNumber
+        ]
+      else [soundFontPlayer (soundFontPath json) instrumentNumber]
     _ -> error $ "Instrument '" ++ unpack instrumentName ++ "' not found"
 
 toInstrumentParameters :: [InstrumentJSON] -> Map Integer (Map Text Double)

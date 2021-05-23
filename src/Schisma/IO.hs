@@ -106,33 +106,31 @@ playSounds headerStatements signals sounds = do
 playTrackerFile
   :: Map Text Text            -- ^ @headerStatements@ - The map containing the
                               --   header statements.
-  -> [Integer]                -- ^ @alwaysOnInstrumentNumbers@ - The numbers of
-                              --   the instrument that should always be on
   -> FilePath                 -- ^ @file@ - The path to the tracker file.
   -> TrackerFileConfiguration -- ^ @trackerConfiguration@ - The tracker
                               --   configuration.
   -> IO ()                    -- ^
-playTrackerFile headerStatements alwaysOnInstrumentNumbers file trackerConfiguration
-  = do
-    tracker <- parseTrackerFile file
+playTrackerFile headerStatements file trackerConfiguration = do
+  tracker <- parseTrackerFile file
 
-    let options      = "-odac -+rtmidi=portmidi -Ma"
-    let header       = merge defaultOrchestraHeaderStatements headerStatements
+  let options      = "-odac -+rtmidi=portmidi -Ma"
+  let header       = merge defaultOrchestraHeaderStatements headerStatements
 
-    let trackerScore = trackerToScore tracker trackerConfiguration
-    let instruments  = trackerInstruments trackerConfiguration
-    let score =
-          map alwaysOnIStatement alwaysOnInstrumentNumbers ++ trackerScore
-    let csd = Csd { csdOptions                   = options
-                  , csdOrchestraHeaderStatements = header
-                  , csdInstruments               = instruments
-                  , csdScore                     = score
-                  }
-    tmpDirectory <- getTemporaryDirectory
-    let csdFilename = tmpDirectory </> (takeBaseName file ++ ".csd")
+  let trackerScore = trackerToScore tracker trackerConfiguration
+  let instruments  = trackerInstruments trackerConfiguration
+  let alwaysOnInstrumentNumbers =
+        map instrumentNumber $ filter instrumentAlwaysOn instruments
+  let score = map alwaysOnIStatement alwaysOnInstrumentNumbers ++ trackerScore
+  let csd = Csd { csdOptions                   = options
+                , csdOrchestraHeaderStatements = header
+                , csdInstruments               = instruments
+                , csdScore                     = score
+                }
+  tmpDirectory <- getTemporaryDirectory
+  let csdFilename = tmpDirectory </> (takeBaseName file ++ ".csd")
 
-    renderCsd csd csdFilename
-    runCsd csdFilename
+  renderCsd csd csdFilename
+  runCsd csdFilename
 
 -- | Compiles the @signals@ into an instrument and runs the resulting Csound
 --   file with MIDI interoperability enabled.

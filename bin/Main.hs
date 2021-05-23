@@ -120,22 +120,15 @@ playTracker (PlayTrackerOptions trackerFile instrumentFile startingLine endingLi
           , cellParameterRenamer = renameKeysFromMap (parameterRenamings config)
           }
 
-    let instrumentsJson     = instruments config
-
-    let trackerInstruments  = map toInstruments instrumentsJson
-    let normalInstruments   = concatMap fst trackerInstruments
-    let alwaysOnInstruments = concatMap snd trackerInstruments
-    let allInstruments      = normalInstruments ++ alwaysOnInstruments
+    let instrumentsJson    = instruments config
+    let trackerInstruments = concatMap toInstruments instrumentsJson
 
     let trackerFileConfiguration = TrackerFileConfiguration
           cellMappers
-          allInstruments
+          trackerInstruments
           (toInstrumentParameters instrumentsJson)
           (startingLine, endingLine)
 
 
     -- TODO: Expose headerStatements, don't use empty
-    playTrackerFile Data.Map.Strict.empty
-                    (map instrumentNumber alwaysOnInstruments)
-                    trackerFile
-                    trackerFileConfiguration
+    playTrackerFile Data.Map.Strict.empty trackerFile trackerFileConfiguration
