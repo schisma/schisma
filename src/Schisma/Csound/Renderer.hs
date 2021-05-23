@@ -74,8 +74,14 @@ import           Schisma.Csound.Types.Csound    ( Csd
                                                   )
                                                 )
 import           Schisma.Csound.Types.Instruments
-                                                ( Instrument(Instrument) )
-import           Schisma.Csound.Types.Score     ( FunctionTableStatement
+                                               as Instruments
+                                                ( Instrument
+                                                  ( instrumentNumber
+                                                  , instrumentOpcode
+                                                  )
+                                                )
+import           Schisma.Csound.Types.Score    as Score
+                                                ( FunctionTableStatement
                                                   ( functionTableActionTime
                                                   , functionTableGenRoutine
                                                   , functionTableGenRoutineParameters
@@ -88,7 +94,10 @@ import           Schisma.Csound.Types.Score     ( FunctionTableStatement
                                                   , instrumentParameters
                                                   , instrumentStartingTime
                                                   )
-                                                , ScoreStatement(..)
+                                                , ScoreStatement
+                                                  ( FStatement
+                                                  , IStatement
+                                                  )
                                                 )
 import           Schisma.Csound.Types.Signals   ( Udo
                                                   ( udoControlPeriodSamples
@@ -127,13 +136,12 @@ renderCsd csd filename = do
   let options     = csdOptions csd
   let header      = elems $ csdOrchestraHeaderStatements csd
 
-  let instruments = nubOrdOn (\(Instrument _ x) -> x) $ csdInstruments csd
+  let instruments = nubOrdOn Instruments.instrumentNumber $ csdInstruments csd
 
-  let instrumentOpcode (Instrument opcode _) = opcode
-  let instrumentNumber (Instrument _ number) = number
-  let instrumentStates =
-        Data.List.map (opcodeToInstrumentState . instrumentOpcode) instruments
-  let numbers          = Data.List.map instrumentNumber instruments
+  let instrumentStates = Data.List.map
+        (opcodeToInstrumentState . Instruments.instrumentOpcode)
+        instruments
+  let numbers          = Data.List.map Instruments.instrumentNumber instruments
   let lines            = Data.List.map instrumentLines instrumentStates
 
   let instrumentBlocks = concat $ zipWith toInstrumentBlock numbers lines
@@ -224,7 +232,7 @@ toInstrumentBlock number lines = textLines where
 toInstrumentStatementLine :: InstrumentStatement -> Text
 toInstrumentStatementLine instrumentStatement = pack line
  where
-  p1     = instrumentNumber instrumentStatement
+  p1     = Score.instrumentNumber instrumentStatement
   p2     = instrumentStartingTime instrumentStatement
   p3     = instrumentDurationTime instrumentStatement
   pRest  = instrumentParameters instrumentStatement

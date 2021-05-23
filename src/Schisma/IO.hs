@@ -26,7 +26,13 @@ import           Schisma.Csound.Score           ( alwaysOnIStatement
 
 import           Schisma.Csound.Types.Csound    ( Csd(..) )
 import           Schisma.Csound.Types.Instruments
-                                                ( Instrument(Instrument) )
+                                                ( Instrument
+                                                  ( Instrument
+                                                  , instrumentAlwaysOn
+                                                  , instrumentNumber
+                                                  , instrumentOpcode
+                                                  )
+                                                )
 import           Schisma.Csound.Types.Score     ( Sound )
 import           Schisma.Csound.Types.Signals   ( ARateSignal
                                                 , Opcode(TerminalOpcode)
@@ -50,19 +56,24 @@ import           ProjectPaths                   ( getIncludesDir )
 
 midiCsd :: Map Text Text -> Bool -> [ARateSignal] -> Csd
 midiCsd headerStatements useVirtual signals =
-  let opcode     = TerminalOpcode $ Op $ out signals
-      instrument = Instrument opcode 1
-      score      = [fZeroStatement 36000]
-      options    = if useVirtual
-        then "-odac -+rtmidi=virtual -M0"
-        else "-odac -+rtmidi=portmidi -Ma"
-      header = merge (delete "massign" defaultOrchestraHeaderStatements)
-                     headerStatements
-  in  Csd { csdOptions                   = options
-          , csdOrchestraHeaderStatements = header
-          , csdInstruments               = [instrument]
-          , csdScore                     = score
-          }
+  let
+    opcode     = TerminalOpcode $ Op $ out signals
+    instrument = Instrument { instrumentOpcode   = opcode
+                            , instrumentNumber   = 1
+                            , instrumentAlwaysOn = False
+                            }
+    score   = [fZeroStatement 36000]
+    options = if useVirtual
+      then "-odac -+rtmidi=virtual -M0"
+      else "-odac -+rtmidi=portmidi -Ma"
+    header = merge (delete "massign" defaultOrchestraHeaderStatements)
+                   headerStatements
+  in
+    Csd { csdOptions                   = options
+        , csdOrchestraHeaderStatements = header
+        , csdInstruments               = [instrument]
+        , csdScore                     = score
+        }
 
 -- | Compiles the @signals@ into an instrument and the @sounds@ into a score
 --   and then runs the resulting Csound file.
@@ -73,9 +84,12 @@ playSounds
   -> [Sound]       -- ^ @sounds@ - The sounds.
   -> IO ()         -- ^
 playSounds headerStatements signals sounds = do
-  let opcode     = TerminalOpcode $ Op $ out signals
-  let instrument = Instrument opcode 1
-  let score      = map (soundToIStatement (1, empty)) sounds
+  let opcode = TerminalOpcode $ Op $ out signals
+  let instrument = Instrument { instrumentOpcode   = opcode
+                              , instrumentNumber   = 1
+                              , instrumentAlwaysOn = False
+                              }
+  let score  = map (soundToIStatement (1, empty)) sounds
   let header = merge defaultOrchestraHeaderStatements headerStatements
   let csd = Csd { csdOptions                   = "-odac"
                 , csdOrchestraHeaderStatements = header
@@ -130,7 +144,7 @@ playWithMidiDevice
   -> [ARateSignal] -- ^ @signals@ - The signals.
   -> IO ()         -- ^
 playWithMidiDevice headerStatements signals = do
-  let csd      = midiCsd headerStatements False signals
+  let csd = midiCsd headerStatements False signals
   tmpDirectory <- getTemporaryDirectory
   let filename = tmpDirectory </> "midi_device.csd"
 
@@ -147,7 +161,7 @@ playWithVirtualMidi
   -> [ARateSignal] -- ^ @signals@ - The signals.
   -> IO ()         -- ^
 playWithVirtualMidi headerStatements signals = do
-  let csd      = midiCsd headerStatements True signals
+  let csd = midiCsd headerStatements True signals
   tmpDirectory <- getTemporaryDirectory
   let filename = tmpDirectory </> "virtual_midi.csd"
 

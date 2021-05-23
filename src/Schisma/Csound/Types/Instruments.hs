@@ -5,5 +5,9 @@ module Schisma.Csound.Types.Instruments
 
 import           Schisma.Csound.Types.Signals   ( Opcode )
 
-data Instrument = Instrument Opcode Integer
+data Instrument = Instrument
+  { instrumentOpcode :: Opcode
+  , instrumentNumber :: Integer
+  , instrumentAlwaysOn :: Bool
+  }
   deriving (Show, Ord, Eq)

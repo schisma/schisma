@@ -61,9 +61,10 @@ import           Schisma.Utilities              ( foldlWithIndex )
 
 midiTrigger :: Map Text KRateSignal -> Integer -> Integer -> Instrument
 midiTrigger parameters midiChannel instrumentNumber = Instrument
-  opcode
-  sourceInstrumentNumber where
-
+  { instrumentOpcode   = opcode
+  , instrumentNumber   = sourceInstrumentNumber
+  , instrumentAlwaysOn = True
+  } where
   -- NOTE: We're setting the duration to -1000000000 so that opcode
   -- tieStatus correctly classifies this note as a standalone note, and not
   -- as an initial note within a group of tied notes. This is important
@@ -101,7 +102,10 @@ midiProfit channel = midiTrigger (Profit.midiSettings channel) channel
 profit
   :: Integer    -- ^ @instrumentNumber@ - The Instrument number.
   -> Instrument -- ^ The Instrument.
-profit = Instrument opcode
+profit instrumentNumber = Instrument { instrumentOpcode   = opcode
+                                     , instrumentNumber   = instrumentNumber
+                                     , instrumentAlwaysOn = False
+                                     }
  where
   pFieldParameters = patchFieldsToPFieldParameters Profit.synthFields
   synth            = Profit.profit pFieldParameters
@@ -122,7 +126,11 @@ soundFontPlayer
   :: Text       -- ^ @file@ - The path to the SF2 file.
   -> Integer    -- ^ @instrumentNumber@ - The Instrument number.
   -> Instrument -- ^ The Instrument.
-soundFontPlayer file = Instrument opcode
+soundFontPlayer file instrumentNumber = Instrument
+  { instrumentOpcode   = opcode
+  , instrumentNumber   = instrumentNumber
+  , instrumentAlwaysOn = False
+  }
  where
   pFieldParameters = patchFieldsToPFieldParameters SoundFont.synthFields
   sf               = SoundFont.player pFieldParameters (stringSignal file)

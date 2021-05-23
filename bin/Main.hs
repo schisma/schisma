@@ -28,7 +28,7 @@ import           Data.Maybe                     ( fromMaybe )
 
 
 import           Schisma.Csound.Types.Instruments
-                                                ( Instrument(Instrument) )
+                                                ( Instrument(instrumentNumber) )
 
 
 import           Schisma.Tracker.Mappers        ( defaultFrequencyMapper
@@ -71,12 +71,10 @@ main = run =<< execParser opts
     (fullDesc <> progDesc "A lightweight composition tool." <> header "schisma")
 
 run :: Command -> IO ()
-run (Tracker trackerCommand) =
-  case trackerCommand of
-    (Play options) -> playTracker options
-run (Synth synthCommand) =
-  case synthCommand of
-    SynthList -> printSynthParameters
+run (Tracker trackerCommand) = case trackerCommand of
+  (Play options) -> playTracker options
+run (Synth synthCommand) = case synthCommand of
+  SynthList -> printSynthParameters
 
 parser :: Parser Command
 parser = hsubparser
@@ -88,9 +86,7 @@ synthParser :: Parser Command
 synthParser = Synth <$> hsubparser
   (command
     "list"
-    (info (pure SynthList)
-          (progDesc "Returns the list of available synths")
-    )
+    (info (pure SynthList) (progDesc "Returns the list of available synths"))
   )
 
 trackerParser :: Parser Command
@@ -131,8 +127,6 @@ playTracker (PlayTrackerOptions trackerFile instrumentFile startingLine endingLi
     let alwaysOnInstruments = concatMap snd trackerInstruments
     let allInstruments      = normalInstruments ++ alwaysOnInstruments
 
-    let toInstrumentNumber (Instrument _ number) = number
-
     let trackerFileConfiguration = TrackerFileConfiguration
           cellMappers
           allInstruments
@@ -142,6 +136,6 @@ playTracker (PlayTrackerOptions trackerFile instrumentFile startingLine endingLi
 
     -- TODO: Expose headerStatements, don't use empty
     playTrackerFile Data.Map.Strict.empty
-                    (map toInstrumentNumber alwaysOnInstruments)
+                    (map instrumentNumber alwaysOnInstruments)
                     trackerFile
                     trackerFileConfiguration
