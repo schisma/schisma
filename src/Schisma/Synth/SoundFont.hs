@@ -75,8 +75,7 @@ amplifierEnvelope settings = adsrEnvelope attack decay sustain release where
 
 defaultSettings :: Map Text IRateSignal
 defaultSettings = fromList settings where
-  toTuple (SynthParameter name _ _ _ defaultValue _) =
-    (name, i# defaultValue)
+  toTuple (SynthParameter name _ _ _ defaultValue _) = (name, i# defaultValue)
   settings = map toTuple synthParameters
 
 midiSettings :: Integer -> Map Text KRateSignal
@@ -88,7 +87,8 @@ midiSettings channel = fromList settings where
     ( name
     , ctrl7WithDefaults (i# channel) (i# midiCCNumber) (k# minimum) (k# maximum)
     )
-  settings = amplitude : frequency : map toTuple synthParameters
+  parameters = filter ((/= "amplitude") . fst) $ map toTuple synthParameters
+  settings = amplitude : frequency : parameters
 
 player :: Map Text IRateSignal -> SRateSignal -> [ARateSignal]
 player parameters fileSignal = output where
@@ -133,16 +133,16 @@ scaleEnvelopeParameter parameter = result where
   result   = i# 2 ^# exponent
 
 synthFields :: [Text]
-synthFields =
-  sort $ "amplitude" : "frequency" : map synthParameterName synthParameters
+synthFields = sort $ "frequency" : map synthParameterName synthParameters
 
 synthParameters :: [SynthParameter]
 synthParameters =
-  [ SynthParameter "amplifierAttack"  (-32768) 32768 1 0 43
-  , SynthParameter "amplifierDecay"   (-32768) 32678 1 0 44
-  , SynthParameter "amplifierRelease" (-32768) 32678 1 0 45
-  , SynthParameter "amplifierSustain" 0        1000  0 0 46
-  , SynthParameter "bank"             0        128   1 0 0
-  , SynthParameter "program"          0        127   1 0 70
-  , SynthParameter "velocity"         0        127   1 0 75
+  [ SynthParameter "amplifierAttack"  (-32768) 32768 1 0  43
+  , SynthParameter "amplifierDecay"   (-32768) 32678 1 0  44
+  , SynthParameter "amplifierRelease" (-32768) 32678 1 0  45
+  , SynthParameter "amplifierSustain" 0        1000  0 0  46
+  , SynthParameter "amplitude"        0        1     0 1 7
+  , SynthParameter "bank"             0        128   1 0  0
+  , SynthParameter "program"          0        127   1 0  70
+  , SynthParameter "velocity"         0        127   1 0  75
   ]

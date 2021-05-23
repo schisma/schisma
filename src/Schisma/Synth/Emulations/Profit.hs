@@ -108,8 +108,7 @@ calculateFrequency frequency semitoneAdjustment fineTuningCentsAdjustment =
 
 defaultSettings :: Map Text IRateSignal
 defaultSettings = fromList settings where
-  toTuple (SynthParameter name _ _ _ defaultValue _) =
-    (name, i# defaultValue)
+  toTuple (SynthParameter name _ _ _ defaultValue _) = (name, i# defaultValue)
   settings = map toTuple synthParameters
 
 e :: Double
@@ -217,7 +216,8 @@ midiSettings channel = fromList settings where
     ( name
     , ctrl7WithDefaults (i# channel) (i# midiCCNumber) (k# minimum) (k# maximum)
     )
-  settings = amplitude : frequency : map toTuple synthParameters
+  parameters = filter ((/= "amplitude") . fst) $ map toTuple synthParameters
+  settings = amplitude : frequency : parameters
 
 mixer :: Map Text IRateSignal -> ARateSignal -> ARateSignal -> ARateSignal
 mixer settings oscA oscB = mix oscillators where
@@ -523,8 +523,7 @@ synth settings = output where
   output         = filtered *# amplifierEnvelope settings
 
 synthFields :: [Text]
-synthFields =
-  sort $ "amplitude" : "frequency" : map synthParameterName synthParameters
+synthFields = sort $ "frequency" : map synthParameterName synthParameters
 
 synthParameters :: [SynthParameter]
 synthParameters =
@@ -609,6 +608,7 @@ synthParameters =
   , SynthParameter "amplifierSustain" 0 1 0 0.4 45
   , SynthParameter "amplifierRelease" 0 1 0 0.1 46
   , SynthParameter "wheelModAmount" 0 1 0 0 1
+  , SynthParameter "amplitude" 0 1 0 1 7
   ]
 
 triangle :: KRateSignal -> KRateSignal -> KRateSignal -> ARateSignal
