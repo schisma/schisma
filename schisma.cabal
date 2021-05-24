@@ -43,6 +43,7 @@ library
       Schisma.CLI
       Schisma.CLI.Synth
       Schisma.CLI.Tracker
+      Schisma.CLI.TrackerSettings
       Schisma.Csound
       Schisma.Csound.GenRoutines
       Schisma.Csound.Opcodes

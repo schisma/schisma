@@ -41,12 +41,16 @@ import           Schisma.Tracker.Types          ( CellMappers(..)
 import           Schisma.Utilities              ( renameKeysFromMap )
 
 import           Schisma.CLI.Synth              ( synths )
-import           Schisma.CLI.Tracker            ( PlayTrackerOptions(..)
-                                                , TrackerJSON(..)
+import           Schisma.CLI.Tracker            ( CompositionFileJSON(..)
+                                                , InstrumentsFileJSON(..)
+                                                , PlayTrackerOptions(..)
+                                                , ProjectFileJSON(..)
+                                                , TrackerSettingsJSON(..)
                                                 , playTrackerOptionsParser
                                                 , toInstrumentParameters
                                                 , toInstruments
                                                 )
+import           Schisma.CLI.TrackerSettings    ( toFrequencyMapper )
 import           Schisma.IO                     ( playTrackerFile )
 
 -- TODO: Doc
@@ -102,33 +106,50 @@ printSynthParameters :: IO ()
 printSynthParameters = putStrLn $ encode synths
 
 playTracker :: PlayTrackerOptions -> IO ()
-playTracker (PlayTrackerOptions trackerFile instrumentFile startingLine endingLine)
-  = do
-    instrumentConfig <-
-      eitherDecodeFileStrict' instrumentFile :: IO (Either String TrackerJSON)
-    let config = case instrumentConfig of
-          Left  message -> error ("Invalid instrument file. " ++ message)
-          Right json    -> json
+playTracker (PlayTrackerOptions projectFile startingLine endingLine) = do
+  projectFileConfig <-
+    eitherDecodeFileStrict' projectFile :: IO (Either String ProjectFileJSON)
+  let projectConfig = case projectFileConfig of
+        Left  message -> error ("Invalid project file. " ++ message)
+        Right json    -> json
 
-    let cellMappers = CellMappers
-        -- TODO: Expose frequency mapper
-        -- TODO: The frequency mapper should have a track number
-        -- associated with it so that it can be applied differently across
-        -- tracks
-          { cellFrequencyMapper  = defaultFrequencyMapper
-          --{ cellFrequencyMapper  = frequencyWithRandomDetuningMapper 2.5
-          , cellParameterRenamer = renameKeysFromMap (parameterRenamings config)
-          }
+  instrumentsFileConfig <-
+    eitherDecodeFileStrict' (instrumentsFile projectConfig) :: IO
+      (Either String InstrumentsFileJSON)
+  let instrumentsConfig = case instrumentsFileConfig of
+        Left  message -> error ("Invalid instruments file. " ++ message)
+        Right json    -> json
 
-    let instrumentsJson    = instruments config
-    let trackerInstruments = concatMap toInstruments instrumentsJson
+  compositionFileConfig <-
+    eitherDecodeFileStrict' (compositionFile projectConfig) :: IO
+      (Either String CompositionFileJSON)
+  let compositionConfig = case compositionFileConfig of
+        Left  message -> error ("Invalid composition file. " ++ message)
+        Right json    -> json
 
-    let trackerFileConfiguration = TrackerFileConfiguration
-          cellMappers
-          trackerInstruments
-          (toInstrumentParameters instrumentsJson)
-          (startingLine, endingLine)
+  let trackerConfig = trackerSettings compositionConfig
+
+  let cellMappers = CellMappers
+      -- TODO: The frequency mapper should have a track number
+      -- associated with it so that it can be applied differently across
+      -- tracks
+        { cellFrequencyMapper  = toFrequencyMapper
+                                   (frequencyMapper trackerConfig)
+        , cellParameterRenamer = renameKeysFromMap
+                                   (parameterRenamings trackerConfig)
+        }
+
+  let instrumentsJson    = instruments instrumentsConfig
+  let trackerInstruments = concatMap toInstruments instrumentsJson
+
+  let trackerFileConfiguration = TrackerFileConfiguration
+        cellMappers
+        trackerInstruments
+        (toInstrumentParameters instrumentsJson)
+        (startingLine, endingLine)
 
 
-    -- TODO: Expose headerStatements, don't use empty
-    playTrackerFile Data.Map.Strict.empty trackerFile trackerFileConfiguration
+  -- TODO: Expose headerStatements, don't use empty
+  playTrackerFile Data.Map.Strict.empty
+                  (trackerFile projectConfig)
+                  trackerFileConfiguration

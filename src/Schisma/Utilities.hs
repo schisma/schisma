@@ -1,5 +1,6 @@
 module Schisma.Utilities
   ( foldlWithIndex
+  , head
   , inputOutputTypes
   , interleave
   , listDifference
@@ -13,7 +14,9 @@ module Schisma.Utilities
   , rotate
   ) where
 
-import           Prelude                 hiding ( lookup )
+import           Prelude                 hiding ( head
+                                                , lookup
+                                                )
 
 import           Data.List                      ( foldl'
                                                 , transpose
@@ -62,6 +65,19 @@ foldlWithIndex
   -> t2                     -- ^ The folded result.
 foldlWithIndex f z xs =
   foldl' (\g x i -> f (g (i - 1)) i x) (const z) xs (length xs - 1)
+
+-- | Retrieves the first element in a list, or Nothing if the list is
+--   empty.
+--
+-- ==== __Examples__
+--
+-- >>> head [10, 11, 12]
+-- Just 10
+--
+-- >>> head []
+-- Nothing
+head :: (Foldable f) => f a -> Maybe a
+head = foldr (\x _ -> pure x) Nothing
 
 -- | Introspects the type signature of a value and splits it into its
 -- inputs and output.

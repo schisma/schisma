@@ -2,7 +2,10 @@
 
 module Schisma.CLI.Tracker
   ( PlayTrackerOptions(..)
-  , TrackerJSON(..)
+  , CompositionFileJSON(..)
+  , InstrumentsFileJSON(..)
+  , ProjectFileJSON(..)
+  , TrackerSettingsJSON(..)
   , playTrackerOptionsParser
   , toInstruments
   , toInstrumentParameters
@@ -35,6 +38,7 @@ import           Data.List                      ( foldl' )
 import           Schisma.Csound.Types.Instruments
                                                 ( Instrument )
 
+import           Schisma.CLI.TrackerSettings    ( FrequencyMapperJSON )
 import           Schisma.Synth.Instruments      ( midiProfit
                                                 , midiSoundFontPlayer
                                                 , profit
@@ -42,6 +46,17 @@ import           Schisma.Synth.Instruments      ( midiProfit
                                                 )
 
 -- TODO: Doc
+
+data TrackerSettingsJSON = TrackerSettingsJSON
+  { parameterRenamings :: Map Text Text
+  , frequencyMapper    :: FrequencyMapperJSON
+  }
+  deriving (Generic, Show)
+
+newtype CompositionFileJSON = CompositionFileJSON
+  { trackerSettings :: TrackerSettingsJSON
+  }
+  deriving (Generic, Show)
 
 data InstrumentJSON = InstrumentJSON
   { number        :: Integer
@@ -53,21 +68,29 @@ data InstrumentJSON = InstrumentJSON
   }
   deriving (Generic, Show)
 
-data TrackerJSON = TrackerJSON
+newtype InstrumentsFileJSON = InstrumentsFileJSON
   { instruments        :: [InstrumentJSON]
-  , parameterRenamings :: Map Text Text
   }
   deriving (Generic, Show)
 
+data ProjectFileJSON = ProjectFileJSON
+  { compositionFile :: FilePath
+  , instrumentsFile :: FilePath
+  , trackerFile     :: FilePath
+  }
+  deriving (Generic, Show)
+
+instance FromJSON TrackerSettingsJSON
+instance FromJSON CompositionFileJSON
 instance FromJSON InstrumentJSON
-instance FromJSON TrackerJSON
+instance FromJSON InstrumentsFileJSON
+instance FromJSON ProjectFileJSON
 
 
 data PlayTrackerOptions = PlayTrackerOptions
-  { trackerFile    :: FilePath
-  , instrumentFile :: FilePath
-  , startingLine   :: Integer
-  , endingLine     :: Integer
+  { projectFile  :: FilePath
+  , startingLine :: Integer
+  , endingLine   :: Integer
   }
   deriving Show
 
@@ -76,12 +99,8 @@ playTrackerOptionsParser :: Parser PlayTrackerOptions
 playTrackerOptionsParser =
   PlayTrackerOptions
     <$> strOption
-          (long "tracker-file" <> short 't' <> metavar "FILENAME" <> help
-            "Tracker grid file"
-          )
-    <*> strOption
-          (long "instrument-file" <> short 'i' <> metavar "FILENAME" <> help
-            "Tracker instrument file"
+          (long "project-file" <> short 'p' <> metavar "FILENAME" <> help
+            "Project file"
           )
     <*> option
           auto
