@@ -26,6 +26,12 @@ import           Data.Aeson                     ( eitherDecodeFileStrict'
 import           Data.Map.Strict                ( empty )
 import           Data.Maybe                     ( fromMaybe )
 
+import           System.Directory               ( canonicalizePath )
+import           System.FilePath                ( (</>)
+                                                , isAbsolute
+                                                , takeDirectory
+                                                )
+
 
 import           Schisma.Csound.Types.Instruments
                                                 ( Instrument(instrumentNumber) )
@@ -113,15 +119,21 @@ playTracker (PlayTrackerOptions projectFile startingLine endingLine) = do
         Left  message -> error ("Invalid project file. " ++ message)
         Right json    -> json
 
+  instrumentsFilePath <- resolveProjectComponentFilePath projectFile
+    $ instrumentsFile projectConfig
+
   instrumentsFileConfig <-
-    eitherDecodeFileStrict' (instrumentsFile projectConfig) :: IO
+    eitherDecodeFileStrict' instrumentsFilePath :: IO
       (Either String InstrumentsFileJSON)
   let instrumentsConfig = case instrumentsFileConfig of
         Left  message -> error ("Invalid instruments file. " ++ message)
         Right json    -> json
 
+  compositionFilePath <- resolveProjectComponentFilePath projectFile
+    $ compositionFile projectConfig
+
   compositionFileConfig <-
-    eitherDecodeFileStrict' (compositionFile projectConfig) :: IO
+    eitherDecodeFileStrict' compositionFilePath :: IO
       (Either String CompositionFileJSON)
   let compositionConfig = case compositionFileConfig of
         Left  message -> error ("Invalid composition file. " ++ message)
@@ -148,8 +160,15 @@ playTracker (PlayTrackerOptions projectFile startingLine endingLine) = do
         (toInstrumentParameters instrumentsJson)
         (startingLine, endingLine)
 
+  trackerFilePath <- resolveProjectComponentFilePath projectFile
+    $ trackerFile projectConfig
 
   -- TODO: Expose headerStatements, don't use empty
-  playTrackerFile Data.Map.Strict.empty
-                  (trackerFile projectConfig)
-                  trackerFileConfiguration
+  playTrackerFile Data.Map.Strict.empty trackerFilePath trackerFileConfiguration
+
+resolveProjectComponentFilePath :: FilePath -> FilePath -> IO FilePath
+resolveProjectComponentFilePath projectFile projectComponentFile =
+  if isAbsolute projectComponentFile
+    then pure projectComponentFile
+    else do
+      canonicalizePath (takeDirectory projectFile </> projectComponentFile)
