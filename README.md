@@ -17,8 +17,9 @@ musician.
 
 # Getting Started
 
-You'll need to first install [Csound](https://csound.com/download.html) and 
-then [Stack](https://docs.haskellstack.org/en/stable/README/#how-to-install).
+You'll need to install [Csound](https://csound.com/download.html),
+[PortMidi](http://portmedia.sourceforge.net/), and then
+[Stack](https://docs.haskellstack.org/en/stable/README/#how-to-install).
 
 After that's done, make sure to add `~/.local/bin` to your `$PATH`, and then 
 run the following from the project root:
@@ -58,12 +59,7 @@ An instruments file is simple JSON. Here's an excerpt from the
       },
       "midiChannel": 1
     }
-  ],
-  "parameterRenamings": {
-    "aa": "amplifierAttack",
-    "rel": "amplifierRelease",
-    "amp": "amplitude"
-  }
+  ]
 }
 ```
 
@@ -79,8 +75,6 @@ The top-level keys are:
     along with their corresponding values
   + `midiChannel` - the MIDI channel (1-16) if [MIDI interop](#midi) is desired,
     or 0 to disable
-* `parameterRenamings` - an object containing parameter aliases that can be
-  used within the [tracker](#tracker)
 
 ## Tracker
 
@@ -150,6 +144,65 @@ serious limitations when handed off to a computer for playback.  There is a
 ideation is required (especially around performance notation) before it will
 achieve parity with the [tracker](#tracker).
 
+## Composition Configuration
+
+Composition-wide settings can be configured in a JSON file. Here are the
+contents of the
+[Commemoration example](https://gitlab.com/schisma/schisma/-/blob/master/examples/Commemoration/composition.json):
+
+```json
+{
+  "trackerSettings": {
+    "parameterRenamings": {
+      "aa": "amplifierAttack",
+      "rel": "amplifierRelease",
+      "amp": "amplitude"
+    },
+    "frequencyMapper": {
+      "name": "default",
+      "arguments": []
+    }
+  }
+}
+```
+
+The top-level keys are:
+
+* `trackerSettings` - an object containing the tracker settings
+  + `parameterRenamings` - an object containing parameter aliases that can be
+    used within the [tracker](#tracker)
+* `frequencyMapper` - an object containing the name of the
+  [frequency mapper](#frequency-mappers), along with the arguments to be passed
+  to it
+
+### Frequency Mappers
+
+Currently, there are two supported frequency mappers:
+
+* `default`: The default frequency mapper will convert pitches using the
+  specified tuning and temperament
+* `withRandomDetuning`: This frequency mapper will convert pitches using the
+  specified tuning and temperament, and then randomly detune each pitch by a
+  maximum number of cents (specified as the first argument to `arguments`)
+
+## Project File
+
+The project file ties together the instruments file, the tracker file, and
+the composition file into one "project". Here are the
+contents of the
+[Commemoration example](https://gitlab.com/schisma/schisma/-/blob/master/examples/Commemoration/project.json):
+
+
+```json
+{
+  "compositionFile": "./composition.json",
+  "instrumentsFile": "./instruments.json",
+  "trackerFile": "./tracker.csv"
+}
+```
+
+Both absolute and relative filenames are supported.
+
 # Output Methods
 
 ## Csound
@@ -161,7 +214,7 @@ Listen to an example score below. (It's a good idea to lower your volume
 first!)
 
 ```sh
-schisma tracker play -t examples/Commemoration/tracker.csv -i examples/Commemoration/instruments.json -s 0 -e 89
+schisma tracker play -p examples/Commemoration/project.json -s 0 -e 89
 ```
 
 The ability to render to an audio file will be available shortly. For now, you
